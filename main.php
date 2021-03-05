@@ -1,11 +1,14 @@
 <?php
 
+use Kellegous\LinkedList;
 use Kellegous\LinkedList\Node;
 
 require __DIR__ . '/vendor/autoload.php';
 
-$list = Node::fromArray([1, 2, 3])
-    ->concat(Node::fromArray([4, 5, 6]));
+$list = (new LinkedList())
+    ->pushBack(20)
+    ->pushBack(30)
+    ->pushFront(10);
 
 foreach ($list->iterate() as $value) {
     printf("%s\n", $value);
