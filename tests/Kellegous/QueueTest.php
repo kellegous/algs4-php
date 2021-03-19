@@ -69,5 +69,15 @@ class QueueTest extends TestCase
         $this->assertTrue($queue->isEmpty());
         $this->assertEquals(0, $queue->size());
         $this->assertEquals([], iterator_to_array($queue->iterate()));
+
+        foreach ($values as $value) {
+            $queue->enqueue($value);
+            $this->assertEquals(
+                $value,
+                $queue->dequeue()
+            );
+            $this->assertTrue($queue->isEmpty());
+            $this->assertEquals(0, $queue->size());
+        }
     }
 }
