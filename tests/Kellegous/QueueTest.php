@@ -59,6 +59,10 @@ class QueueTest extends TestCase
             $this->assertEquals(count($values) - $i, $queue->size());
             $this->assertEquals(
                 $value,
+                $queue->peek()
+            );
+            $this->assertEquals(
+                $value,
                 $queue->dequeue()
             );
         }
