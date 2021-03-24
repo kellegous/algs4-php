@@ -7,7 +7,7 @@ use Kellegous\Bag\Node;
 /**
  * @package Kellegous
  */
-class Bag
+class Bag implements \Countable
 {
     /**
      * @var Node|null
@@ -42,7 +42,7 @@ class Bag
     /**
      * @return int
      */
-    public function size(): int
+    public function count(): int
     {
         return $this->n;
     }

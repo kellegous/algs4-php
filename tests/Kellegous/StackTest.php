@@ -13,7 +13,7 @@ class StackTest extends TestCase
     {
         $stack = new Stack();
         $this->assertTrue($stack->isEmpty());
-        $this->assertEquals(0, $stack->size());
+        $this->assertCount(0, $stack);
         $this->assertEquals([], iterator_to_array($stack->iterate()));
         $this->assertInstanceOf(
             NoSuchElementException::class,

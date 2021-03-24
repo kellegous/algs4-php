@@ -9,7 +9,7 @@ class BagTest extends TestCase
     public function testEmpty() {
         $bag = new Bag();
         $this->assertTrue($bag->isEmpty());
-        $this->assertEquals(0, $bag->size());
+        $this->assertCount(0, $bag);
         $this->assertEquals(
             [],
             iterator_to_array($bag->iterate())
@@ -22,10 +22,7 @@ class BagTest extends TestCase
         $values = [0, 0, 1, 2, 3, 10, 20];
         foreach ($values as $i => $value) {
             $bag->add($value);
-            $this->assertEquals(
-                $i + 1,
-                $bag->size()
-            );
+            $this->assertCount($i + 1, $bag);
             $this->assertFalse($bag->isEmpty());
         }
 

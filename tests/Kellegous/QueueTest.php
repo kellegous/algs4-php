@@ -13,7 +13,7 @@ class QueueTest extends TestCase
     {
         $queue = new Queue();
         $this->assertTrue($queue->isEmpty());
-        $this->assertEquals(0, $queue->size());
+        $this->assertCount(0, $queue);
         $this->assertEquals(
             [],
             iterator_to_array($queue->iterate())
@@ -39,7 +39,7 @@ class QueueTest extends TestCase
         foreach ($values as $i => $value) {
             $queue->enqueue($value);
             $this->assertFalse($queue->isEmpty());
-            $this->assertEquals($i + 1, $queue->size());
+            $this->assertCount($i + 1, $queue);
         }
         $this->assertEquals(
             $values,
@@ -56,7 +56,7 @@ class QueueTest extends TestCase
         }
         foreach ($values as $i => $value) {
             $this->assertFalse($queue->isEmpty());
-            $this->assertEquals(count($values) - $i, $queue->size());
+            $this->assertCount(count($values) - $i, $queue);
             $this->assertEquals(
                 $value,
                 $queue->peek()
@@ -67,7 +67,7 @@ class QueueTest extends TestCase
             );
         }
         $this->assertTrue($queue->isEmpty());
-        $this->assertEquals(0, $queue->size());
+        $this->assertCount(0, $queue);
         $this->assertEquals([], iterator_to_array($queue->iterate()));
 
         foreach ($values as $value) {
@@ -77,7 +77,7 @@ class QueueTest extends TestCase
                 $queue->dequeue()
             );
             $this->assertTrue($queue->isEmpty());
-            $this->assertEquals(0, $queue->size());
+            $this->assertCount(0, $queue);
         }
     }
 }

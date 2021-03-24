@@ -4,7 +4,7 @@ namespace Kellegous;
 
 use Kellegous\Bag\Node;
 
-class Queue
+class Queue implements \Countable
 {
     /**
      * @var Node|null
@@ -26,7 +26,10 @@ class Queue
         return $this->head === null;
     }
 
-    public function size(): int
+    /**
+     * @return int
+     */
+    public function count(): int
     {
         return $this->n;
     }

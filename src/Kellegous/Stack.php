@@ -4,7 +4,7 @@ namespace Kellegous;
 
 use Kellegous\Bag\Node;
 
-class Stack
+class Stack implements \Countable
 {
     /**
      * @var Node|null
@@ -27,7 +27,7 @@ class Stack
     /**
      * @return int
      */
-    public function size(): int
+    public function count(): int
     {
         return $this->n;
     }
