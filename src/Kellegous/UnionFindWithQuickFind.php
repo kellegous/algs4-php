@@ -2,7 +2,7 @@
 
 namespace Kellegous;
 
-class UnionFindWithQuickFind implements \Countable
+class UnionFindWithQuickFind implements UnionFind
 {
     /**
      * @var \SplFixedArray
