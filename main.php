@@ -1,15 +1,7 @@
-<?php
+<?php declare(strict_types=1);
 
-use Kellegous\LinkedList;
-use Kellegous\LinkedList\Node;
+require 'vendor/autoload.php';
+\Kellegous\Algs4\Main::run();
 
-require __DIR__ . '/vendor/autoload.php';
 
-$list = (new LinkedList())
-    ->pushBack(20)
-    ->pushBack(30)
-    ->pushFront(10);
 
-foreach ($list->iterate() as $value) {
-    printf("%s\n", $value);
-}

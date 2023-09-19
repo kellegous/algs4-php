@@ -1,28 +1,24 @@
 {
-  "name": "kellegous/ilearns",
-  "description": "Learning Things",
+  "name": "kellegous/algs4",
+  "description": "PHP port of Princeton Algs4 course code",
   "type": "project",
   "license": "MIT",
   "authors": [
     {
-      "name": "Kelly Norton"
+      "name": "Kelly Norton",
+      "email": "kellegous@gmail.com"
     }
   ],
   "require": {
-    "php": "^7.4.0"
-  },
-  "suggest": {
+    "php": "^8.2"
   },
   "require-dev": {
-    "phpunit/phpunit": "^8.5.0"
+    "phpunit/phpunit": "^10",
+    "phpstan/phpstan": "^1.10"
   },
   "autoload": {
     "psr-4": {
-      "Kellegous\\": "src/Kellegous",
-      "Algs\\": "src/Algs"
+      "Kellegous\\Algs4\\": "src/Kellegous/Algs4"
     }
-  },
-  "autoload-dev": {
-  },
-  "bin": []
+  }
 }
