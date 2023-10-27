@@ -18,11 +18,9 @@ final class Bag implements \Countable, \Iterator
     private int $n = 0;
 
     /**
-     * @var Node<T>|null
+     * @var \Iterator<T>|null
      */
-    private ?Node $current = null;
-
-    private int $key = 0;
+    private ?\Iterator $iterator = null;
 
     /**
      * @param T $item
@@ -45,37 +43,42 @@ final class Bag implements \Countable, \Iterator
      */
     public function current(): mixed
     {
-        return $this->current?->getItem();
+        return $this->iterator?->current();
     }
 
     public function next(): void
     {
-        if ($this->current === null) {
-            return;
-        }
-
-        $this->current = $this->current->getNext();
-        $this->key++;
+        $this->iterator?->next();
     }
 
     public function key(): int
     {
-        return $this->key;
+        return $this->iterator?->key();
     }
 
     public function valid(): bool
     {
-        return $this->current !== null;
+        return $this->iterator !== null && $this->iterator->valid();
     }
 
     public function rewind(): void
     {
-        $this->current = $this->first;
-        $this->key = 0;
+        $this->iterator = $this->iterate();
     }
 
     public function count(): int
     {
         return $this->n;
+    }
+
+    /**
+     * @return \Iterator<T>
+     */
+    private function iterate(): \Iterator
+    {
+        $current = $this->first;
+        for (; $current !== null; $current = $current->getNext()) {
+            yield $current->getItem();
+        }
     }
 }
