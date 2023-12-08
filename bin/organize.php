@@ -64,5 +64,6 @@ usort($files_with_sections, function (array $a, array $b): int {
 });
 
 foreach ($files_with_sections as ['file' => $file, 'url' => $url, 'section' => $section]) {
-    printf(" - [ ] [%s](%s) %s\n", implode('.', $section), $url, $file);
+    $source_url = "https://github.com/kevin-wayne/algs4/blob/master/src/main/java/edu/princeton/cs/algs4/$file";
+    printf(" - [ ] [%s](%s) [%s](%s)\n", implode('.', $section), $url, $file, $source_url);
 }
