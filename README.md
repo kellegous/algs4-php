@@ -7,8 +7,8 @@ this [public repository](https://github.com/kevin-wayne/algs4).
 
 # Progress
 
-- [ ] [1.1](https://algs4.cs.princeton.edu/11model) [Average.java](https://github.com/kevin-wayne/algs4/blob/master/src/main/java/edu/princeton/cs/algs4/Average.java)
-- [ ] [1.1](https://algs4.cs.princeton.edu/11model) [BinarySearch.java](https://github.com/kevin-wayne/algs4/blob/master/src/main/java/edu/princeton/cs/algs4/BinarySearch.java)
+- [x] [1.1](https://algs4.cs.princeton.edu/11model) [Average.java](https://github.com/kevin-wayne/algs4/blob/master/src/main/java/edu/princeton/cs/algs4/Average.java)
+- [x] [1.1](https://algs4.cs.princeton.edu/11model) [BinarySearch.java](https://github.com/kevin-wayne/algs4/blob/master/src/main/java/edu/princeton/cs/algs4/BinarySearch.java)
 - [ ] [1.1](https://algs4.cs.princeton.edu/11model) [Cat.java](https://github.com/kevin-wayne/algs4/blob/master/src/main/java/edu/princeton/cs/algs4/Cat.java)
 - [ ] [1.1](https://algs4.cs.princeton.edu/11model) [Knuth.java](https://github.com/kevin-wayne/algs4/blob/master/src/main/java/edu/princeton/cs/algs4/Knuth.java)
 - [ ] [1.1](https://algs4.cs.princeton.edu/11model) [RandomSeq.java](https://github.com/kevin-wayne/algs4/blob/master/src/main/java/edu/princeton/cs/algs4/RandomSeq.java)
