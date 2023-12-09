@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace Kellegous\Algs4;
 
@@ -7,7 +7,7 @@ namespace Kellegous\Algs4;
  * where order is determined by a $compare function.
  *
  * <p>
- * The <em>indexOf</em> operations takes logarithmic time in the worst case.
+ * The <em>indexOf</em> and <em>search</em> operations take logarithmic time in the worst case.
  * <p>
  *
  * For additional documentation, see <a href="https://algs4.cs.princeton.edu/11model">Section 1.1</a> of
