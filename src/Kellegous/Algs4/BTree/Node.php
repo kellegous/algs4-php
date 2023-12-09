@@ -4,6 +4,7 @@ namespace Kellegous\Algs4\BTree;
 
 use Kellegous\Algs4\BTree;
 use Kellegous\Algs4\T;
+use SplFixedArray;
 
 /**
  * @template K extends \Comparable
@@ -14,13 +15,13 @@ final class Node
     public int $m;
 
     /**
-     * @var \SplFixedArray<Entry<K, V>> $children
+     * @var SplFixedArray<Entry<K, V>> $children
      */
-    public \SplFixedArray $children;
+    public SplFixedArray $children;
 
     public function __construct(int $k)
     {
-        $this->children = new \SplFixedArray(BTree::M);
+        $this->children = new SplFixedArray(BTree::M);
         $this->m = $k;
     }
 

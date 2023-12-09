@@ -1,4 +1,5 @@
-<?php declare(strict_types=1);
+<?php
+declare(strict_types=1);
 
 namespace Kellegous\Algs4\Bag;
 
@@ -15,7 +16,7 @@ final class Node
     /**
      * @var Node<T>|null
      */
-    private ?Node $next = null;
+    private ?Node $next;
 
     /**
      * @param T $item

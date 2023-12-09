@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Kellegous\Algs4;
 
+use Exception;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
@@ -122,5 +123,68 @@ class ScannerTest extends TestCase
         array $expected
     ): void {
         self::assertEquals($expected, $scanner->readLines());
+    }
+
+    /**
+     * @return iterable<array{Scanner, int[], Exception|null}>
+     * @throws IOException
+     */
+    public static function readIntsTests(): iterable
+    {
+        yield 'empty' => [
+            new Scanner(self::streamWith('')),
+            [],
+            null,
+        ];
+
+        yield 'one value' => [
+            new Scanner(self::streamWith('42')),
+            [42],
+            null,
+        ];
+
+        yield 'one value w/ spaces' => [
+            new Scanner(self::streamWith(" 42 ")),
+            [42],
+            null,
+        ];
+
+        yield 'multiple values' => [
+            new Scanner(self::streamWith("-12 -45 -90\n")),
+            [-12, -45, -90],
+            null,
+        ];
+
+        yield 'invalid number' => [
+            new Scanner(self::streamWith("0xff")),
+            [],
+            new InputFormatException('unable to parse int: 0xff'),
+        ];
+    }
+
+    /**
+     * @param Scanner $scanner
+     * @param int[] $expected
+     * @param Exception|null $exception
+     * @return void
+     */
+    #[Test, DataProvider('readIntsTests')]
+    public function testReadInts(
+        Scanner $scanner,
+        array $expected,
+        ?Exception $exception = null
+    ): void {
+        if ($exception === null) {
+            self::assertEquals($expected, $scanner->readInts());
+            return;
+        }
+
+        try {
+            $scanner->readInts();
+            self::fail('Expected exception');
+        } catch (Exception $e) {
+            self::assertInstanceOf(get_class($exception), $e);
+            self::assertEquals($exception->getMessage(), $e->getMessage());
+        }
     }
 }
