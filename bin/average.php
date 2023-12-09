@@ -18,7 +18,7 @@ use Kellegous\Algs4\Stdin;
 
 $sum = 0;
 $count = 0;
-foreach (Stdin::readFloats() as $i) {
+foreach (Stdin::get()->readFloats() as $i) {
     $sum += $i;
     $count++;
 }
