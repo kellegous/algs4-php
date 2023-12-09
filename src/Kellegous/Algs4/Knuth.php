@@ -1,6 +1,10 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace Kellegous\Algs4;
+
+use Closure;
 
 /**
  *  The {@code Knuth} class provides a client for shuffling an array of values
@@ -13,7 +17,7 @@ namespace Kellegous\Algs4;
  *  see <a href="https://algs4.cs.princeton.edu/11model">Section 1.1</a> of
  *  <i>Algorithms, 4th Edition</i> by Robert Sedgewick and Kevin Wayne.
  *  See {@link StdRandom} for versions that shuffle arrays and
- *  subarrays of objects, doubles, and ints.
+ *  sub-arrays of objects, doubles, and integers.
  *
  * @author Robert Sedgewick
  * @author Kevin Wayne
@@ -32,14 +36,13 @@ final class Knuth
      *
      * @template T
      * @param T[] $a
-     * @param \Closure(int):int|null $random_int
+     * @param Closure(int):int|null $random_int
      * @return T[]
      */
     public static function shuffle(
-        array    $a,
-        \Closure $random_int = null
-    ): array
-    {
+        array $a,
+        Closure $random_int = null
+    ): array {
         $random_int ??= fn(int $n) => random_int(0, $n);
         for ($i = 0, $n = count($a); $i < $n; $i++) {
             $r = $random_int($i);
@@ -57,14 +60,13 @@ final class Knuth
      *
      * @template T
      * @param T[] $a
-     * @param \Closure(int):int|null $random_int
+     * @param Closure(int):int|null $random_int
      * @return T[]
      */
     public static function shuffleAlternate(
-        array    $a,
-        \Closure $random_int = null
-    ): array
-    {
+        array $a,
+        Closure $random_int = null
+    ): array {
         $random_int ??= fn(int $n) => random_int(0, $n);
         for ($i = 0, $n = count($a); $i < $n; $i++) {
             $r = $i + $random_int($n - $i - 1);

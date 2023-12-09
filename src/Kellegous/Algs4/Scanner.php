@@ -2,6 +2,11 @@
 
 namespace Kellegous\Algs4;
 
+use Closure;
+use Generator;
+use InvalidArgumentException;
+use RuntimeException;
+
 class Scanner
 {
     private const WHITESPACE = '/\s+/';
@@ -32,12 +37,16 @@ class Scanner
         int $buffer_size = self::DEFAULT_BUFFER_SIZE
     ) {
         if ($buffer_size < 0) {
-            throw new \InvalidArgumentException("buffer size must be >= 0");
+            throw new InvalidArgumentException("buffer size must be >= 0");
         }
         $this->stream = $stream;
         $this->buffer_size = $buffer_size;
     }
 
+    /**
+     * @return bool
+     * @throws IOException
+     */
     public function isEmpty(): bool
     {
         if ($this->buffer === '') {
@@ -46,12 +55,17 @@ class Scanner
         return $this->buffer === '' && feof($this->stream);
     }
 
+    /**
+     * @param string $pattern
+     * @param bool $discard_leading
+     * @return string
+     * @throws IOException
+     * @throws UnexpectedEndOfStreamException
+     */
     private function readUntil(
         string $pattern,
         bool $discard_leading
     ): string {
-        // TODO(knorton): There is a bug here where the delimiter appears at the end of the buffer. We cannot know if
-        // the delimiter stops at the end of the buffer, so we have to expand the buffer and retry.
         while (true) {
             if ($this->isEmpty()) {
                 throw new UnexpectedEndOfStreamException();
@@ -60,13 +74,11 @@ class Scanner
             $matches = null;
             $status = preg_match($pattern, $this->buffer, $matches, PREG_OFFSET_CAPTURE);
             if ($status === false) {
-                throw new \RuntimeException("match failure");
+                throw new RuntimeException("match failure");
             } elseif ($status === 0) {
                 // if we're at the end of the stream, just return what is left
                 if (feof($this->stream)) {
-                    $result = $this->buffer;
-                    $this->buffer = '';
-                    return $result;
+                    return $this->takeBuffer();
                 }
 
                 // otherwise, expand the buffer and try again
@@ -96,8 +108,8 @@ class Scanner
 
     /**
      * @return string
-     *
      * @throws UnexpectedEndOfStreamException
+     * @throws IOException
      */
     public function readString(): string
     {
@@ -106,8 +118,8 @@ class Scanner
 
     /**
      * @return string
-     *
      * @throws UnexpectedEndOfStreamException
+     * @throws IOException
      */
     public function readLine(): string
     {
@@ -116,9 +128,9 @@ class Scanner
 
     /**
      * @return int
-     *
      * @throws InputFormatException
      * @throws UnexpectedEndOfStreamException
+     * @throws IOException
      */
     public function readInt(): int
     {
@@ -131,9 +143,9 @@ class Scanner
 
     /**
      * @return float
-     *
      * @throws InputFormatException
      * @throws UnexpectedEndOfStreamException
+     * @throws IOException
      */
     public function readFloat(): float
     {
@@ -146,9 +158,9 @@ class Scanner
 
     /**
      * @return bool
-     *
      * @throws InputFormatException
      * @throws UnexpectedEndOfStreamException
+     * @throws IOException
      */
     public function readBool(): bool
     {
@@ -166,22 +178,26 @@ class Scanner
 
     /**
      * @return string
+     * @throws IOException
      */
     public function readAll(): string
     {
-        $buffer = $this->buffer;
-        $this->buffer = '';
-        return $buffer . stream_get_contents($this->stream);
+        $data = stream_get_contents($this->stream);
+        if ($data === false) {
+            throw new IOException("unable to read from stream");
+        }
+        return $this->takeBuffer() . $data;
     }
 
     /**
      * @template T
      *
-     * @param \Closure():T $fn
+     * @param Closure():T $fn
      *
-     * @return \Generator<T>
+     * @return Generator<T>
+     * @throws IOException
      */
-    private function readMany(\Closure $fn): \Generator
+    private function readMany(Closure $fn): Generator
     {
         while (!$this->isEmpty()) {
             yield $fn();
@@ -192,6 +208,7 @@ class Scanner
      * @return string[]
      *
      * @throws UnexpectedEndOfStreamException
+     * @throws IOException
      */
     public function readStrings(): array
     {
@@ -204,6 +221,7 @@ class Scanner
      * @return string[]
      *
      * @throws UnexpectedEndOfStreamException
+     * @throws IOException
      */
     public function readLines(): array
     {
@@ -217,6 +235,7 @@ class Scanner
      *
      * @throws InputFormatException
      * @throws UnexpectedEndOfStreamException
+     * @throws IOException
      */
     public function readInts(): array
     {
@@ -230,6 +249,7 @@ class Scanner
      *
      * @throws InputFormatException
      * @throws UnexpectedEndOfStreamException
+     * @throws IOException
      */
     public function readFloats(): array
     {
@@ -243,6 +263,7 @@ class Scanner
      *
      * @throws InputFormatException
      * @throws UnexpectedEndOfStreamException
+     * @throws IOException
      */
     public function readBools(): array
     {
@@ -251,6 +272,10 @@ class Scanner
         );
     }
 
+    /**
+     * @return void
+     * @throws IOException
+     */
     private function expandBuffer(): void
     {
         $data = fread($this->stream, $this->buffer_size);
@@ -258,5 +283,15 @@ class Scanner
             throw new IOException("unable to read from stream");
         }
         $this->buffer .= $data;
+    }
+
+    /**
+     * @return string
+     */
+    private function takeBuffer(): string
+    {
+        $buffer = $this->buffer;
+        $this->buffer = '';
+        return $buffer;
     }
 }

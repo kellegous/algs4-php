@@ -2,6 +2,8 @@
 
 namespace Kellegous\Algs4;
 
+use Countable;
+use InvalidArgumentException;
 use Kellegous\Algs4\BTree\Entry;
 use Kellegous\Algs4\BTree\Node;
 
@@ -9,9 +11,9 @@ use Kellegous\Algs4\BTree\Node;
  * @template K extends \Comparable
  * @template V
  */
-class BTree implements \Countable
+final class BTree implements Countable
 {
-    const M = 4;
+    public const M = 4;
 
     /**
      * @var Node<K, V|null>
@@ -50,7 +52,7 @@ class BTree implements \Countable
     public function get(mixed $key): mixed
     {
         if ($key === null) {
-            throw new \InvalidArgumentException("argument to get() is null");
+            throw new InvalidArgumentException("argument to get() is null");
         }
         return $this->search($this->root, $key, $this->height);
     }
@@ -58,7 +60,7 @@ class BTree implements \Countable
     public function put(mixed $key, mixed $val): void
     {
         if ($key === null) {
-            throw new \InvalidArgumentException("argument key to put() is null");
+            throw new InvalidArgumentException("argument key to put() is null");
         }
         $u = $this->insert($this->root, $key, $val, $this->height);
         $this->n++;

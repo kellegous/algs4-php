@@ -1,14 +1,18 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace Kellegous\Algs4;
 
+use Countable;
+use Iterator;
 use Kellegous\Algs4\Bag\Node;
 
 /**
  * @template T
- * @implements \Iterator<int, T>
+ * @implements Iterator<int, T>
  */
-final class Bag implements \Countable, \Iterator
+final class Bag implements Countable, Iterator
 {
     /**
      * @var Node<T>|null
@@ -18,9 +22,9 @@ final class Bag implements \Countable, \Iterator
     private int $n = 0;
 
     /**
-     * @var \Iterator<T>|null
+     * @var Iterator<T>|null
      */
-    private ?\Iterator $iterator = null;
+    private ?Iterator $iterator = null;
 
     /**
      * @param T $item
@@ -72,9 +76,9 @@ final class Bag implements \Countable, \Iterator
     }
 
     /**
-     * @return \Iterator<T>
+     * @return Iterator<T>
      */
-    private function iterate(): \Iterator
+    private function iterate(): Iterator
     {
         $current = $this->first;
         for (; $current !== null; $current = $current->getNext()) {

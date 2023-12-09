@@ -2,6 +2,8 @@
 
 namespace Kellegous\Algs4;
 
-class IOException extends \Exception
+use Exception;
+
+class IOException extends Exception
 {
 }

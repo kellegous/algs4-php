@@ -18,7 +18,7 @@ class ScannerTest extends TestCase
     private static function streamWith(string $content): mixed
     {
         $data = base64_encode($content);
-        $stream = fopen("data://text/plain;base64,{$data}", 'r');
+        $stream = fopen("data://text/plain;base64,$data", 'r');
         if ($stream === false) {
             throw new IOException('Unable to create stream');
         }
@@ -67,6 +67,7 @@ class ScannerTest extends TestCase
      * @param string[] $expected
      * @return void
      * @throws UnexpectedEndOfStreamException
+     * @throws IOException
      */
     #[Test, DataProvider('readStringsTests')]
     public function testReadStrings(
@@ -113,6 +114,7 @@ class ScannerTest extends TestCase
      * @param string[] $expected
      * @return void
      * @throws UnexpectedEndOfStreamException
+     * @throws IOException
      */
     #[Test, DataProvider('readLinesTests')]
     public function testReadLines(

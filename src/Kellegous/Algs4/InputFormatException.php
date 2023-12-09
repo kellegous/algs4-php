@@ -2,6 +2,8 @@
 
 namespace Kellegous\Algs4;
 
-class InputFormatException extends \Exception
+use Exception;
+
+class InputFormatException extends Exception
 {
 }

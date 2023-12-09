@@ -1,6 +1,10 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace Kellegous\Algs4;
+
+use Closure;
 
 /**
  * The {@code BinarySearch} class provides a static method for binary searching for values in a sorted array of values,
@@ -30,16 +34,15 @@ final class BinarySearch
      *
      * @param T[] $a
      * @param T $key
-     * @param \Closure(T, T):int|null $compare
+     * @param Closure(T, T):int|null $compare
      *
      * @return int
      */
     public static function indexOf(
-        array     $a,
-        mixed     $key,
-        ?\Closure $compare = null
-    ): int
-    {
+        array $a,
+        mixed $key,
+        ?Closure $compare = null
+    ): int {
         $compare ??= function (mixed $a, mixed $b): int {
             return $a <=> $b;
         };
@@ -51,7 +54,7 @@ final class BinarySearch
             $cmp = $compare($key, $a[$mid]);
             if ($cmp < 0) {
                 $hi = $mid - 1;
-            } else if ($cmp > 0) {
+            } elseif ($cmp > 0) {
                 $lo = $mid + 1;
             } else {
                 return $mid;
@@ -68,18 +71,17 @@ final class BinarySearch
      *
      * @param T[] $a
      * @param T $key
-     * @param \Closure(T, T):int|null $compare
+     * @param Closure(T, T):int|null $compare
      *
      * @return int
      *
      * @see https://pkg.go.dev/sort#Search
      */
     public static function search(
-        array     $a,
-        mixed     $key,
-        ?\Closure $compare = null
-    ): int
-    {
+        array $a,
+        mixed $key,
+        ?Closure $compare = null
+    ): int {
         $compare ??= function (mixed $a, mixed $b): int {
             return $a <=> $b;
         };
