@@ -7,6 +7,9 @@ use Generator;
 use InvalidArgumentException;
 use RuntimeException;
 
+/**
+ *
+ */
 class Scanner
 {
     private const WHITESPACE = '/\s+/';

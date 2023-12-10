@@ -5,12 +5,14 @@ declare(strict_types=1);
 namespace Kellegous\Algs4;
 
 use Exception;
+use Kellegous\Algs4\Testing\ErrorStream;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 
 class ScannerTest extends TestCase
 {
+
     /**
      * @param string $content
      * @return resource
@@ -167,6 +169,9 @@ class ScannerTest extends TestCase
      * @param int[] $expected
      * @param Exception|null $exception
      * @return void
+     * @throws IOException
+     * @throws InputFormatException
+     * @throws UnexpectedEndOfStreamException
      */
     #[Test, DataProvider('readIntsTests')]
     public function testReadInts(
@@ -185,6 +190,42 @@ class ScannerTest extends TestCase
         } catch (Exception $e) {
             self::assertInstanceOf(get_class($exception), $e);
             self::assertEquals($exception->getMessage(), $e->getMessage());
+        }
+    }
+
+    /**
+     * @return iterable<array{Scanner, Exception}>
+     * @throws IOException
+     */
+    public static function errorTests(): iterable
+    {
+        ErrorStream::register();
+        try {
+            yield 'read error' => [
+                new Scanner(fopen("error-after://foo", 'r')),
+                new IOException('unable to read from stream'),
+            ];
+
+            yield 'read empty' => [
+                new Scanner(self::streamWith('')),
+                new UnexpectedEndOfStreamException(),
+            ];
+        } finally {
+            ErrorStream::unregister();
+        }
+    }
+
+    #[Test, DataProvider('errorTests')]
+    public function testErrors(
+        Scanner $scanner,
+        Exception $expected
+    ): void {
+        try {
+            $scanner->readString();
+            self::fail('Expected exception');
+        } catch (Exception $e) {
+            self::assertInstanceOf(get_class($expected), $e);
+            self::assertEquals($expected->getMessage(), $e->getMessage());
         }
     }
 }
