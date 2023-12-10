@@ -4,15 +4,17 @@ declare(strict_types=1);
 
 namespace Kellegous\Algs4;
 
+use Closure;
 use Exception;
 use Kellegous\Algs4\Testing\ErrorStream;
+use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 
+#[CoversClass(Scanner::class)]
 class ScannerTest extends TestCase
 {
-
     /**
      * @param string $content
      * @return resource
@@ -73,7 +75,7 @@ class ScannerTest extends TestCase
      * @throws IOException
      */
     #[Test, DataProvider('readStringsTests')]
-    public function testReadStrings(
+    public function readStrings(
         Scanner $scanner,
         array $expected
     ): void {
@@ -120,7 +122,7 @@ class ScannerTest extends TestCase
      * @throws IOException
      */
     #[Test, DataProvider('readLinesTests')]
-    public function testReadLines(
+    public function readLines(
         Scanner $scanner,
         array $expected
     ): void {
@@ -174,18 +176,33 @@ class ScannerTest extends TestCase
      * @throws UnexpectedEndOfStreamException
      */
     #[Test, DataProvider('readIntsTests')]
-    public function testReadInts(
+    public function readInts(
         Scanner $scanner,
         array $expected,
         ?Exception $exception = null
     ): void {
+        $this->readMany(fn() => $scanner->readInts(), $expected, $exception);
+    }
+
+    /**
+     * @template T
+     * @param Closure():T $fn
+     * @param T[] $expected
+     * @param Exception|null $exception
+     * @return void
+     */
+    private function readMany(
+        Closure $fn,
+        array $expected,
+        ?Exception $exception
+    ): void {
         if ($exception === null) {
-            self::assertEquals($expected, $scanner->readInts());
+            self::assertEquals($expected, $fn());
             return;
         }
 
         try {
-            $scanner->readInts();
+            $fn();
             self::fail('Expected exception');
         } catch (Exception $e) {
             self::assertInstanceOf(get_class($exception), $e);
@@ -194,8 +211,95 @@ class ScannerTest extends TestCase
     }
 
     /**
+     * @return iterable<array{Scanner, float[], Exception|null}>
+     * @throws IOException
+     */
+    public static function readFloatsTests(): iterable
+    {
+        yield 'empty' => [
+            new Scanner(self::streamWith('')),
+            [],
+            null,
+        ];
+    }
+
+    /**
+     * @param Scanner $scanner
+     * @param float[] $expected
+     * @param Exception|null $exception
+     * @return void
+     * @throws IOException
+     * @throws InputFormatException
+     * @throws UnexpectedEndOfStreamException
+     */
+    #[Test, DataProvider('readFloatsTests')]
+    public function readFloats(
+        Scanner $scanner,
+        array $expected,
+        ?Exception $exception = null
+    ): void {
+        $this->readMany(fn() => $scanner->readFloats(), $expected, $exception);
+    }
+
+    /**
+     * @return iterable<array{Scanner, bool[], ?Exception}>
+     * @throws IOException
+     */
+    public static function readBoolsTests(): iterable
+    {
+        yield 'empty' => [
+            new Scanner(self::streamWith('')),
+            [],
+            null,
+        ];
+
+        yield 'one value' => [
+            new Scanner(self::streamWith('true')),
+            [true],
+            null,
+        ];
+
+        yield 'one value w/ spaces' => [
+            new Scanner(self::streamWith(" false ")),
+            [false],
+            null,
+        ];
+
+        yield 'multiple values' => [
+            new Scanner(self::streamWith("1 0 false true\n")),
+            [true, false, false, true],
+            null,
+        ];
+
+        yield 'invalid bool' => [
+            new Scanner(self::streamWith("yes")),
+            [],
+            new InputFormatException('unable to parse bool: yes'),
+        ];
+    }
+
+    /**
+     * @param Scanner $scanner
+     * @param bool[] $expected
+     * @param Exception|null $exception
+     * @return void
+     * @throws IOException
+     * @throws InputFormatException
+     * @throws UnexpectedEndOfStreamException
+     */
+    #[Test, DataProvider('readBoolsTests')]
+    public function readBools(
+        Scanner $scanner,
+        array $expected,
+        ?Exception $exception = null
+    ): void {
+        $this->readMany(fn() => $scanner->readBools(), $expected, $exception);
+    }
+
+    /**
      * @return iterable<array{Scanner, Exception}>
      * @throws IOException
+     * @throws Exception
      */
     public static function errorTests(): iterable
     {
@@ -216,7 +320,7 @@ class ScannerTest extends TestCase
     }
 
     #[Test, DataProvider('errorTests')]
-    public function testErrors(
+    public function errors(
         Scanner $scanner,
         Exception $expected
     ): void {

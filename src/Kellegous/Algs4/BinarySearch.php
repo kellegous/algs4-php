@@ -87,11 +87,11 @@ final class BinarySearch
         };
 
         $lo = 0;
-        $hi = count($a) - 1;
+        $hi = count($a);
         while ($lo < $hi) {
             $mid = $lo + (($hi - $lo) >> 1);
-            $cmp = $compare($key, $a[$mid]);
-            if ($cmp >= 0) {
+            $cmp = $compare($a[$mid], $key);
+            if ($cmp < 0) {
                 $lo = $mid + 1;
             } else {
                 $hi = $mid;
