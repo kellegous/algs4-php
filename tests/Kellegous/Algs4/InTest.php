@@ -12,8 +12,8 @@ use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 
-#[CoversClass(Scanner::class)]
-class ScannerTest extends TestCase
+#[CoversClass(In::class)]
+class InTest extends TestCase
 {
     /**
      * @param string $content
@@ -31,44 +31,44 @@ class ScannerTest extends TestCase
     }
 
     /**
-     * @return iterable<array{Scanner, string[]}>
+     * @return iterable<array{In, string[]}>
      * @throws IOException
      */
     public static function readStringsTests(): iterable
     {
         yield 'empty' => [
-            new Scanner(self::streamWith('')),
+            new In(self::streamWith('')),
             [],
         ];
 
         yield 'one' => [
-            new Scanner(self::streamWith('a')),
+            new In(self::streamWith('a')),
             ['a'],
         ];
 
         yield 'with spaces' => [
-            new Scanner(self::streamWith('a b')),
+            new In(self::streamWith('a b')),
             ['a', 'b'],
         ];
 
         yield 'with newlines' => [
-            new Scanner(self::streamWith("a\nb\n")),
+            new In(self::streamWith("a\nb\n")),
             ['a', 'b'],
         ];
 
         yield 'with multiple delimiters' => [
-            new Scanner(self::streamWith("a \t\nb \t\n")),
+            new In(self::streamWith("a \t\nb \t\n")),
             ['a', 'b'],
         ];
 
         yield 'delimiter crosses buffer' => [
-            new Scanner(self::streamWith("a   b"), 3),
+            new In(self::streamWith("a   b"), 3),
             ['a', 'b'],
         ];
     }
 
     /**
-     * @param Scanner $scanner
+     * @param In $scanner
      * @param string[] $expected
      * @return void
      * @throws UnexpectedEndOfStreamException
@@ -76,46 +76,46 @@ class ScannerTest extends TestCase
      */
     #[Test, DataProvider('readStringsTests')]
     public function readStrings(
-        Scanner $scanner,
+        In $scanner,
         array $expected
     ): void {
         self::assertEquals($expected, $scanner->readStrings());
     }
 
     /**
-     * @return iterable<array{Scanner, string[]}>
+     * @return iterable<array{In, string[]}>
      * @throws IOException
      */
     public static function readLinesTests(): iterable
     {
         yield 'empty' => [
-            new Scanner(self::streamWith('')),
+            new In(self::streamWith('')),
             [],
         ];
 
         yield 'only new line' => [
-            new Scanner(self::streamWith("\n")),
+            new In(self::streamWith("\n")),
             [''],
         ];
 
         yield 'single line' => [
-            new Scanner(self::streamWith("a")),
+            new In(self::streamWith("a")),
             ['a'],
         ];
 
         yield 'single line with newline' => [
-            new Scanner(self::streamWith("a\n")),
+            new In(self::streamWith("a\n")),
             ['a'],
         ];
 
         yield 'empty lines' => [
-            new Scanner(self::streamWith("a\n\n")),
+            new In(self::streamWith("a\n\n")),
             ['a', ''],
         ];
     }
 
     /**
-     * @param Scanner $scanner
+     * @param In $scanner
      * @param string[] $expected
      * @return void
      * @throws UnexpectedEndOfStreamException
@@ -123,51 +123,51 @@ class ScannerTest extends TestCase
      */
     #[Test, DataProvider('readLinesTests')]
     public function readLines(
-        Scanner $scanner,
+        In $scanner,
         array $expected
     ): void {
         self::assertEquals($expected, $scanner->readLines());
     }
 
     /**
-     * @return iterable<array{Scanner, int[], Exception|null}>
+     * @return iterable<array{In, int[], Exception|null}>
      * @throws IOException
      */
     public static function readIntsTests(): iterable
     {
         yield 'empty' => [
-            new Scanner(self::streamWith('')),
+            new In(self::streamWith('')),
             [],
             null,
         ];
 
         yield 'one value' => [
-            new Scanner(self::streamWith('42')),
+            new In(self::streamWith('42')),
             [42],
             null,
         ];
 
         yield 'one value w/ spaces' => [
-            new Scanner(self::streamWith(" 42 ")),
+            new In(self::streamWith(" 42 ")),
             [42],
             null,
         ];
 
         yield 'multiple values' => [
-            new Scanner(self::streamWith("-12 -45 -90\n")),
+            new In(self::streamWith("-12 -45 -90\n")),
             [-12, -45, -90],
             null,
         ];
 
         yield 'invalid number' => [
-            new Scanner(self::streamWith("0xff")),
+            new In(self::streamWith("0xff")),
             [],
             new InputFormatException('unable to parse int: 0xff'),
         ];
     }
 
     /**
-     * @param Scanner $scanner
+     * @param In $scanner
      * @param int[] $expected
      * @param Exception|null $exception
      * @return void
@@ -177,7 +177,7 @@ class ScannerTest extends TestCase
      */
     #[Test, DataProvider('readIntsTests')]
     public function readInts(
-        Scanner $scanner,
+        In $scanner,
         array $expected,
         ?Exception $exception = null
     ): void {
@@ -211,20 +211,20 @@ class ScannerTest extends TestCase
     }
 
     /**
-     * @return iterable<array{Scanner, float[], Exception|null}>
+     * @return iterable<array{In, float[], Exception|null}>
      * @throws IOException
      */
     public static function readFloatsTests(): iterable
     {
         yield 'empty' => [
-            new Scanner(self::streamWith('')),
+            new In(self::streamWith('')),
             [],
             null,
         ];
     }
 
     /**
-     * @param Scanner $scanner
+     * @param In $scanner
      * @param float[] $expected
      * @param Exception|null $exception
      * @return void
@@ -234,7 +234,7 @@ class ScannerTest extends TestCase
      */
     #[Test, DataProvider('readFloatsTests')]
     public function readFloats(
-        Scanner $scanner,
+        In $scanner,
         array $expected,
         ?Exception $exception = null
     ): void {
@@ -242,44 +242,44 @@ class ScannerTest extends TestCase
     }
 
     /**
-     * @return iterable<array{Scanner, bool[], ?Exception}>
+     * @return iterable<array{In, bool[], ?Exception}>
      * @throws IOException
      */
     public static function readBoolsTests(): iterable
     {
         yield 'empty' => [
-            new Scanner(self::streamWith('')),
+            new In(self::streamWith('')),
             [],
             null,
         ];
 
         yield 'one value' => [
-            new Scanner(self::streamWith('true')),
+            new In(self::streamWith('true')),
             [true],
             null,
         ];
 
         yield 'one value w/ spaces' => [
-            new Scanner(self::streamWith(" false ")),
+            new In(self::streamWith(" false ")),
             [false],
             null,
         ];
 
         yield 'multiple values' => [
-            new Scanner(self::streamWith("1 0 false true\n")),
+            new In(self::streamWith("1 0 false true\n")),
             [true, false, false, true],
             null,
         ];
 
         yield 'invalid bool' => [
-            new Scanner(self::streamWith("yes")),
+            new In(self::streamWith("yes")),
             [],
             new InputFormatException('unable to parse bool: yes'),
         ];
     }
 
     /**
-     * @param Scanner $scanner
+     * @param In $scanner
      * @param bool[] $expected
      * @param Exception|null $exception
      * @return void
@@ -289,7 +289,7 @@ class ScannerTest extends TestCase
      */
     #[Test, DataProvider('readBoolsTests')]
     public function readBools(
-        Scanner $scanner,
+        In $scanner,
         array $expected,
         ?Exception $exception = null
     ): void {
@@ -297,7 +297,7 @@ class ScannerTest extends TestCase
     }
 
     /**
-     * @return iterable<array{Scanner, Exception}>
+     * @return iterable<array{In, Exception}>
      * @throws IOException
      * @throws Exception
      */
@@ -306,12 +306,12 @@ class ScannerTest extends TestCase
         ErrorStream::register();
         try {
             yield 'read error' => [
-                new Scanner(fopen("error-after://foo", 'r')),
+                new In(fopen("error-after://foo", 'r')),
                 new IOException('unable to read from stream'),
             ];
 
             yield 'read empty' => [
-                new Scanner(self::streamWith('')),
+                new In(self::streamWith('')),
                 new UnexpectedEndOfStreamException(),
             ];
         } finally {
@@ -321,7 +321,7 @@ class ScannerTest extends TestCase
 
     #[Test, DataProvider('errorTests')]
     public function errors(
-        Scanner $scanner,
+        In $scanner,
         Exception $expected
     ): void {
         try {

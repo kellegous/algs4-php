@@ -10,7 +10,7 @@ use RuntimeException;
 /**
  *
  */
-class Scanner
+final class In
 {
     private const WHITESPACE = '/\s+/';
 
@@ -42,6 +42,11 @@ class Scanner
         if ($buffer_size < 0) {
             throw new InvalidArgumentException("buffer size must be >= 0");
         }
+
+        if (!is_resource($stream)) {
+            throw new InvalidArgumentException("stream must be a resource");
+        }
+
         $this->stream = $stream;
         $this->buffer_size = $buffer_size;
     }
@@ -279,6 +284,17 @@ class Scanner
      * @return void
      * @throws IOException
      */
+    public function close(): void
+    {
+        if (!fclose($this->stream)) {
+            throw new IOException("unable to close stream");
+        }
+    }
+
+    /**
+     * @return void
+     * @throws IOException
+     */
     private function expandBuffer(): void
     {
         $data = fread($this->stream, $this->buffer_size);
@@ -296,5 +312,19 @@ class Scanner
         $buffer = $this->buffer;
         $this->buffer = '';
         return $buffer;
+    }
+
+    /**
+     * @param string $filename
+     * @return self
+     * @throws IOException
+     */
+    public static function fromFile(string $filename): self
+    {
+        $stream = fopen($filename, 'r');
+        if ($stream === false) {
+            throw new IOException("unable to open file: $filename");
+        }
+        return new self($stream);
     }
 }

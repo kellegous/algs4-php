@@ -10,21 +10,21 @@ namespace Kellegous\Algs4;
 final class Stdin
 {
     /**
-     * @var Scanner|null
+     * @var In|null
      */
-    private static ?Scanner $instance = null;
+    private static ?In $instance = null;
 
     private function __construct()
     {
     }
 
     /**
-     * @return Scanner
+     * @return In
      */
-    public static function get(): Scanner
+    public static function get(): In
     {
         if (self::$instance === null) {
-            self::$instance = new Scanner(STDIN);
+            self::$instance = new In(STDIN);
         }
         return self::$instance;
     }
