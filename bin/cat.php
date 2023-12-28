@@ -18,7 +18,7 @@ declare(strict_types=1);
  *  a tiny
  *  test.
  *
- *  % java Cat in1.txt in2.txt out.txt
+ *  % php bin/cat.php in1.txt in2.txt out.txt
  *
  *  % more out.txt
  *  This is
@@ -40,5 +40,9 @@ if ($argc < 3) {
 $out = Out::toFile($argv[$argc - 1]);
 for ($i = 1; $i < $argc - 1; $i++) {
     $in = In::fromFile($argv[$i]);
-    $out->println($in->readAll());
+    try {
+        $out->println($in->readAll());
+    } finally {
+        $in->close();
+    }
 }
