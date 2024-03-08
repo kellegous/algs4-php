@@ -2,19 +2,19 @@
 
 namespace Kellegous\Algs4\Testing;
 
+use Kellegous\Algs4\Accumulator;
+
 class Stats
 {
     /**
      * @param float $min
      * @param float $max
-     * @param float $mean
-     * @param float $stddev
+     * @param Accumulator $accumulator
      */
     public function __construct(
         private float $min,
         private float $max,
-        private float $mean,
-        private float $stddev,
+        private Accumulator $accumulator,
     ) {
     }
 
@@ -30,12 +30,12 @@ class Stats
 
     public function mean(): float
     {
-        return $this->mean;
+        return $this->accumulator->mean();
     }
 
     public function stddev(): float
     {
-        return $this->stddev;
+        return $this->accumulator->standardDeviation();
     }
 
     /**
@@ -44,24 +44,14 @@ class Stats
      */
     public static function from(\Iterator $samples): self
     {
-        $n = 0;
-        $sum = 0.0;
-        $sum_squared = 0.0;
         $min = PHP_INT_MAX;
         $max = PHP_INT_MIN;
+        $accumulator = new Accumulator();
         foreach ($samples as $x) {
-            $n++;
-            $sum += $x;
-            $sum_squared += $x * $x;
             $min = min($min, $x);
             $max = max($max, $x);
+            $accumulator->add($x);
         }
-        $mean = $sum / $n;
-        return new self(
-            $min,
-            $max,
-            $mean,
-            sqrt(($sum_squared - $sum * $sum / $n) / ($n - 1))
-        );
+        return new self($min, $max, $accumulator);
     }
 }
