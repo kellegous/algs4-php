@@ -1,9 +1,10 @@
 <?php
 
 declare(strict_types=1);
-require 'vendor/autoload.php';
 
-use Kellegous\Algs4\Stdin;
+use Kellegous\Algs4\Stdio;
+
+require 'vendor/autoload.php';
 
 /**
  *  average.php provides a program for reading in a sequence
@@ -20,7 +21,7 @@ use Kellegous\Algs4\Stdin;
 
 $sum = 0;
 $count = 0;
-foreach (Stdin::get()->readFloats() as $i) {
+foreach (Stdio::in()->readFloats() as $i) {
     $sum += $i;
     $count++;
 }

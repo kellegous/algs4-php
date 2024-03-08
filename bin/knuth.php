@@ -1,4 +1,6 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 require 'vendor/autoload.php';
 
 /******************************************************************************
@@ -45,9 +47,9 @@ require 'vendor/autoload.php';
  ******************************************************************************/
 
 use Kellegous\Algs4\Knuth;
-use Kellegous\Algs4\Stdin;
+use Kellegous\Algs4\Stdio;
 
-$a = Stdin::get()->readStrings();
+$a = Stdio::in()->readStrings();
 foreach (Knuth::shuffle($a) as $s) {
     printf("%s\n", $s);
 }
