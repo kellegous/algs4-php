@@ -6,6 +6,7 @@ namespace Kellegous\Algs4;
 
 use Closure;
 use Exception;
+use Iterator;
 use Kellegous\Algs4\Testing\ErrorStream;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
@@ -79,7 +80,10 @@ class InTest extends TestCase
         In $scanner,
         array $expected
     ): void {
-        self::assertEquals($expected, $scanner->readStrings());
+        self::assertEquals(
+            $expected,
+            iterator_to_array($scanner->readStrings())
+        );
     }
 
     /**
@@ -126,7 +130,10 @@ class InTest extends TestCase
         In $scanner,
         array $expected
     ): void {
-        self::assertEquals($expected, $scanner->readLines());
+        self::assertEquals(
+            $expected,
+            iterator_to_array($scanner->readLines())
+        );
     }
 
     /**
@@ -186,7 +193,7 @@ class InTest extends TestCase
 
     /**
      * @template T
-     * @param Closure():T $fn
+     * @param Closure():Iterator<T> $fn
      * @param T[] $expected
      * @param Exception|null $exception
      * @return void
@@ -196,18 +203,10 @@ class InTest extends TestCase
         array $expected,
         ?Exception $exception
     ): void {
-        if ($exception === null) {
-            self::assertEquals($expected, $fn());
-            return;
+        if ($exception !== null) {
+            self::expectExceptionObject($exception);
         }
-
-        try {
-            $fn();
-            self::fail('Expected exception');
-        } catch (Exception $e) {
-            self::assertInstanceOf(get_class($exception), $e);
-            self::assertEquals($exception->getMessage(), $e->getMessage());
-        }
+        self::assertEquals($expected, iterator_to_array($fn()));
     }
 
     /**
@@ -293,7 +292,11 @@ class InTest extends TestCase
         array $expected,
         ?Exception $exception = null
     ): void {
-        $this->readMany(fn() => $scanner->readBools(), $expected, $exception);
+        $this->readMany(
+            fn() => $scanner->readBools(),
+            $expected,
+            $exception
+        );
     }
 
     /**
@@ -308,11 +311,6 @@ class InTest extends TestCase
             yield 'read error' => [
                 new In(fopen("error-after://foo", 'r')),
                 new IOException('unable to read from stream'),
-            ];
-
-            yield 'read empty' => [
-                new In(self::streamWith('')),
-                new UnexpectedEndOfStreamException(),
             ];
         } finally {
             ErrorStream::unregister();

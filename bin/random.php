@@ -5,7 +5,7 @@ declare(strict_types=1);
 use Kellegous\Algs4\Random;
 use Random\Engine\Mt19937;
 
-require 'vendor/autoload.php';
+require __DIR__ . '/../vendor/autoload.php';
 
 const USAGE = "Usage: php random.php <n> [seed]\n";
 

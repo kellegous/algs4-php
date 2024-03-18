@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 use Kellegous\Algs4\Stdio;
 
-require 'vendor/autoload.php';
+require __DIR__ . '/../vendor/autoload.php';
 
 /**
  *  average.php provides a program for reading in a sequence

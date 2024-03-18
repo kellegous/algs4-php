@@ -1,7 +1,7 @@
 <?php
 
 declare(strict_types=1);
-require 'vendor/autoload.php';
+require __DIR__ . '/../vendor/autoload.php';
 
 /******************************************************************************
  *  Execution:    php bin/knuth.php < list.txt
@@ -49,7 +49,7 @@ require 'vendor/autoload.php';
 use Kellegous\Algs4\Knuth;
 use Kellegous\Algs4\Stdio;
 
-$a = Stdio::in()->readStrings();
+$a = iterator_to_array(Stdio::in()->readStrings());
 foreach (Knuth::shuffle($a) as $s) {
     printf("%s\n", $s);
 }

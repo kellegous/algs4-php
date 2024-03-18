@@ -12,9 +12,10 @@ use RuntimeException;
  */
 final class In
 {
-    private const WHITESPACE = '/\s+/';
+    private const string WHITESPACE = '/\s+/';
+    private const string NEWLINE = '/\n/';
 
-    private const DEFAULT_BUFFER_SIZE = 4096;
+    private const int DEFAULT_BUFFER_SIZE = 4096;
 
     /**
      * @param resource $stream
@@ -52,59 +53,32 @@ final class In
     }
 
     /**
-     * @return bool
-     * @throws IOException
-     */
-    public function isEmpty(): bool
-    {
-        if ($this->buffer === '') {
-            $this->expandBuffer();
-        }
-        return $this->buffer === '' && feof($this->stream);
-    }
-
-    /**
      * @param string $pattern
-     * @param bool $discard_leading
-     * @return string
+     * @return string|null
      * @throws IOException
-     * @throws UnexpectedEndOfStreamException
      */
-    private function readUntil(
-        string $pattern,
-        bool $discard_leading
-    ): string {
-        while (true) {
-            if ($this->isEmpty()) {
-                throw new UnexpectedEndOfStreamException();
-            }
-
+    private function readUntil(string $pattern): ?string
+    {
+        while ($this->buffer !== '' || !feof($this->stream)) {
             $matches = null;
             $status = preg_match($pattern, $this->buffer, $matches, PREG_OFFSET_CAPTURE);
             if ($status === false) {
                 throw new RuntimeException("match failure");
             } elseif ($status === 0) {
-                // if we're at the end of the stream, just return what is left
-                if (feof($this->stream)) {
+                if (!$this->expandBuffer()) {
                     return $this->takeBuffer();
                 }
-
-                // otherwise, expand the buffer and try again
-                $this->expandBuffer();
                 continue;
             }
 
             $a = $matches[0][1];
             $b = $matches[0][1] + strlen($matches[0][0]);
-            if ($discard_leading && $a === 0) {
-                $this->buffer = substr($this->buffer, $b);
-                continue;
-            }
 
             // if the delimiter is at the end of the buffer, we need to expand the buffer and try again because the
             // delimiter may continue beyond the buffer.
-            if ($b === strlen($this->buffer) && !feof($this->stream)) {
-                $this->expandBuffer();
+            if ($b === strlen($this->buffer)
+                && $pattern === self::WHITESPACE
+                && $this->expandBuffer()) {
                 continue;
             }
 
@@ -112,67 +86,78 @@ final class In
             $this->buffer = substr($this->buffer, $b);
             return $result;
         }
+
+        return null;
     }
 
     /**
-     * @return string
-     * @throws UnexpectedEndOfStreamException
+     * @return ?string
      * @throws IOException
      */
-    public function readString(): string
+    public function readString(): ?string
     {
-        return $this->readUntil(self::WHITESPACE, true);
+        do {
+            $s = $this->readUntil(self::WHITESPACE);
+        } while ($s === '');
+        return $s;
     }
 
     /**
-     * @return string
-     * @throws UnexpectedEndOfStreamException
+     * @return ?string
      * @throws IOException
      */
-    public function readLine(): string
+    public function readLine(): ?string
     {
-        return $this->readUntil('/\n/', false);
+        return $this->readUntil(self::NEWLINE);
     }
 
     /**
-     * @return int
+     * @return ?int
      * @throws InputFormatException
-     * @throws UnexpectedEndOfStreamException
      * @throws IOException
      */
-    public function readInt(): int
+    public function readInt(): ?int
     {
         $s = $this->readString();
-        if (filter_var($s, FILTER_VALIDATE_INT) === false) {
+        if ($s === null) {
+            return null;
+        }
+        $v = filter_var($s, FILTER_VALIDATE_INT);
+        if ($v === false) {
             throw new InputFormatException("unable to parse int: $s");
         }
-        return intval($s);
+        return $v;
     }
 
     /**
-     * @return float
+     * @return ?float
      * @throws InputFormatException
-     * @throws UnexpectedEndOfStreamException
      * @throws IOException
      */
-    public function readFloat(): float
+    public function readFloat(): ?float
     {
         $s = $this->readString();
-        if (filter_var($s, FILTER_VALIDATE_FLOAT) === false) {
+        if ($s === null) {
+            return null;
+        }
+        $v = filter_var($s, FILTER_VALIDATE_FLOAT);
+        if ($v === false) {
             throw new InputFormatException("unable to parse float: $s");
         }
-        return floatval($s);
+        return $v;
     }
 
     /**
-     * @return bool
+     * @return ?bool
      * @throws InputFormatException
-     * @throws UnexpectedEndOfStreamException
      * @throws IOException
      */
-    public function readBool(): bool
+    public function readBool(): ?bool
     {
         $s = $this->readString();
+        if ($s === null) {
+            return null;
+        }
         switch (strtolower($s)) {
             case 'true':
             case '1':
@@ -200,84 +185,71 @@ final class In
     /**
      * @template T
      *
-     * @param Closure():T $fn
+     * @param Closure():(T|null) $fn
      *
      * @return Generator<T>
-     * @throws IOException
      */
     private function readMany(Closure $fn): Generator
     {
-        while (!$this->isEmpty()) {
-            yield $fn();
+        while (true) {
+            $v = $fn();
+            if ($v === null) {
+                return;
+            }
+            yield $v;
         }
     }
 
     /**
-     * @return string[]
+     * @return Generator<string>
+     * @throws IOException
+     */
+    public function readStrings(): Generator
+    {
+        return $this->readMany(fn() => $this->readString());
+    }
+
+    /**
+     * @return Generator<string>
      *
      * @throws UnexpectedEndOfStreamException
      * @throws IOException
      */
-    public function readStrings(): array
+    public function readLines(): Generator
     {
-        return iterator_to_array(
-            $this->readMany(fn() => $this->readString())
-        );
+        return $this->readMany(fn() => $this->readLine());
     }
 
     /**
-     * @return string[]
-     *
-     * @throws UnexpectedEndOfStreamException
+     * @return Generator<int>
+     * @throws InputFormatException
      * @throws IOException
      */
-    public function readLines(): array
+    public function readInts(): Generator
     {
-        return iterator_to_array(
-            $this->readMany(fn() => $this->readLine())
-        );
+        return $this->readMany(fn() => $this->readInt());
     }
 
     /**
-     * @return int[]
+     * @return Generator<float>
      *
      * @throws InputFormatException
-     * @throws UnexpectedEndOfStreamException
      * @throws IOException
      */
-    public function readInts(): array
+    public function readFloats(): Generator
     {
-        return iterator_to_array(
-            $this->readMany(fn() => $this->readInt())
-        );
+        return $this->readMany(fn() => $this->readFloat());
     }
 
     /**
-     * @return float[]
+     * @return Generator<bool>
      *
      * @throws InputFormatException
-     * @throws UnexpectedEndOfStreamException
      * @throws IOException
      */
-    public function readFloats(): array
+    public function readBools(): Generator
     {
-        return iterator_to_array(
-            $this->readMany(fn() => $this->readFloat())
-        );
-    }
-
-    /**
-     * @return bool[]
-     *
-     * @throws InputFormatException
-     * @throws UnexpectedEndOfStreamException
-     * @throws IOException
-     */
-    public function readBools(): array
-    {
-        return iterator_to_array(
-            $this->readMany(fn() => $this->readBool())
-        );
+        return $this->readMany(fn() => $this->readBool());
     }
 
     /**
@@ -292,26 +264,31 @@ final class In
     }
 
     /**
-     * @return void
+     * @return bool
      * @throws IOException
      */
-    private function expandBuffer(): void
+    private function expandBuffer(): bool
     {
+        if (feof($this->stream)) {
+            return false;
+        }
+
         $data = fread($this->stream, $this->buffer_size);
         if ($data === false) {
             throw new IOException("unable to read from stream");
         }
         $this->buffer .= $data;
+        return $data !== '';
     }
 
     /**
-     * @return string
+     * @return string|null
      */
-    private function takeBuffer(): string
+    private function takeBuffer(): ?string
     {
         $buffer = $this->buffer;
         $this->buffer = '';
-        return $buffer;
+        return $buffer === '' ? null : $buffer;
     }
 
     /**

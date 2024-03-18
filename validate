@@ -6,8 +6,7 @@ function run_tests(): int
     $status = 0;
     passthru(
         sprintf(
-            "%s/vendor/bin/phpunit --configuration=%s/tests/phpunit.xml %s/tests",
-            __DIR__,
+            "%s/vendor/bin/phpunit %s/tests",
             __DIR__,
             __DIR__
         ),
