@@ -14,7 +14,7 @@ use Random\Engine\Mt19937;
 #[CoversClass(Random::class)]
 class RandomTest extends TestCase
 {
-    private const N = 10000;
+    private const int N = 10000;
 
     /**
      * @template T

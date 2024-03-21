@@ -31,5 +31,5 @@ function run_static_analysis(): int
 $test_status = run_tests();
 $analysis_status = run_static_analysis();
 printf("PHPUnit Tests: ..................... %s\n", $test_status === 0 ? "👍" : "👎");
-printf("PHPStan Static Analysis: ........... %s\n", $test_status === 0 ? "👍" : "👎");
+printf("PHPStan Static Analysis: ........... %s\n", $analysis_status === 0 ? "👍" : "👎");
 exit($test_status + $analysis_status);
