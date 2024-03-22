@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Kellegous\Algs4;
 
 use PHPUnit\Framework\Attributes\CoversClass;

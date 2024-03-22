@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Kellegous\Algs4;
 
 use Closure;
@@ -184,8 +186,7 @@ class RandomTest extends TestCase
         ];
     }
 
-    #[Test]
-    #[DataProvider('invalidInputTests')]
+    #[Test, DataProvider('invalidInputTests')]
     public function invalidInputs(
         Closure $fn,
         \Exception $exception

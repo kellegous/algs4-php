@@ -20,7 +20,7 @@ this [public repository](https://github.com/kevin-wayne/algs4).
 - [ ] [1.2](https://algs4.cs.princeton.edu/12oop) [Interval2D.java](https://github.com/kevin-wayne/algs4/blob/master/src/main/java/edu/princeton/cs/algs4/Interval2D.java)
 - [ ] [1.2](https://algs4.cs.princeton.edu/12oop) [Point2D.java](https://github.com/kevin-wayne/algs4/blob/master/src/main/java/edu/princeton/cs/algs4/Point2D.java)
 - [ ] [1.2](https://algs4.cs.princeton.edu/12oop) [RectHV.java](https://github.com/kevin-wayne/algs4/blob/master/src/main/java/edu/princeton/cs/algs4/RectHV.java)
-- [ ] [1.2](https://algs4.cs.princeton.edu/12oop) [StaticSETofInts.java](https://github.com/kevin-wayne/algs4/blob/master/src/main/java/edu/princeton/cs/algs4/StaticSETofInts.java)
+- [x] [1.2](https://algs4.cs.princeton.edu/12oop) [StaticSETofInts.java](https://github.com/kevin-wayne/algs4/blob/master/src/main/java/edu/princeton/cs/algs4/StaticSETofInts.java)
 - [ ] [1.2](https://algs4.cs.princeton.edu/12oop) [Transaction.java](https://github.com/kevin-wayne/algs4/blob/master/src/main/java/edu/princeton/cs/algs4/Transaction.java)
 - [ ] [1.2](https://algs4.cs.princeton.edu/12oop) [Vector.java](https://github.com/kevin-wayne/algs4/blob/master/src/main/java/edu/princeton/cs/algs4/Vector.java)
 - [ ] [1.3](https://algs4.cs.princeton.edu/13stacks) [Bag.java](https://github.com/kevin-wayne/algs4/blob/master/src/main/java/edu/princeton/cs/algs4/Bag.java)
