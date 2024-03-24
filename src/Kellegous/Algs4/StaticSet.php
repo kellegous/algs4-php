@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Kellegous\Algs4;
 
 use Closure;
-use InvalidArgumentException;
 
 /**
  * @template T int|string
@@ -30,6 +29,11 @@ use InvalidArgumentException;
 final class StaticSet
 {
     /**
+     * @var T[]
+     */
+    private array $keys;
+
+    /**
      * @var Closure(T, T): int
      */
     private Closure $comparator;
@@ -37,12 +41,31 @@ final class StaticSet
     /**
      * @param T[] $keys
      */
-    public function __construct(private array $keys)
+    public function __construct(array $keys)
     {
-        $cmp = self::getComparator($this->keys);
-        usort($this->keys, $cmp);
-        self::ensureUnique($this->keys);
+        $cmp = self::getComparator($keys);
+        usort($keys, $cmp);
+        $this->keys = iterator_to_array(self::uniqueKeys($keys, $cmp));
         $this->comparator = $cmp;
+    }
+
+    /**
+     * @param T[] $keys
+     * @param Closure(T, T): int $cmp
+     * @return iterable<T>
+     */
+    private static function uniqueKeys(array $keys, Closure $cmp): iterable
+    {
+        if (empty($keys)) {
+            return;
+        }
+
+        yield $keys[0];
+        for ($i = 1, $n = count($keys); $i < $n; $i++) {
+            if ($cmp($keys[$i], $keys[$i - 1]) !== 0) {
+                yield $keys[$i];
+            }
+        }
     }
 
     /**
@@ -57,21 +80,6 @@ final class StaticSet
             }
         }
         return fn($a, $b) => $a <=> $b;
-    }
-
-    /**
-     * @param T[] $keys
-     * @return void
-     */
-    private static function ensureUnique(array $keys): void
-    {
-        for ($i = 1, $n = count($keys); $i < $n; $i++) {
-            if ($keys[$i] === $keys[$i - 1]) {
-                throw new InvalidArgumentException(
-                    "keys contains duplicate value: {$keys[$i]}"
-                );
-            }
-        }
     }
 
     /**
