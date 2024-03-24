@@ -13,29 +13,29 @@ use PHPUnit\Framework\TestCase;
 final class StaticSetOfIntsTest extends TestCase
 {
     /**
-     * @return iterable<array{StaticSetOfInts, array<int, int>}>
+     * @return iterable<array{StaticSetOfInts, array{int, int}[]}>
      */
     public static function rankTests(): iterable
     {
         yield 'empty' => [
             new StaticSetOfInts([]),
-            [-1 => -1, 0 => -1, 1 => -1],
+            [[-1, -1], [0, -1], [1, -1]]
         ];
 
         yield 'one' => [
             new StaticSetOfInts([42]),
-            [42 => 0, 0 => -1],
+            [[42, 0], [0, -1]],
         ];
 
         yield 'many' => [
             new StaticSetOfInts([3, 1, 2]),
-            [0 => -1, 1 => 0, 2 => 1, 3 => 2, 4 => -1],
+            [[0, -1], [1, 0], [2, 1], [3, 2], [4, -1]],
         ];
     }
 
     /**
      * @param StaticSetOfInts $set
-     * @param array<int, int> $expected
+     * @param array{int, int}[] $expected
      * @return void
      */
     #[Test, DataProvider("rankTests")]
@@ -43,37 +43,35 @@ final class StaticSetOfIntsTest extends TestCase
         StaticSetOfInts $set,
         array $expected,
     ): void {
-        $ranks = [];
-        foreach ($expected as $key => $rank) {
-            $ranks[$key] = $set->rank($key);
+        foreach ($expected as [$key, $rank]) {
+            self::assertEquals($rank, $set->rank($key));
         }
-        self::assertEquals($expected, $ranks);
     }
 
     /**
-     * @return iterable<array{StaticSetOfInts, array<int, bool>}>
+     * @return iterable<array{StaticSetOfInts, array{int, bool}[]}>
      */
     public static function containsTests(): iterable
     {
         yield 'emtpy' => [
             new StaticSetOfInts([]),
-            [-1 => false, 0 => false, 1 => false],
+            [[-1, false], [0, false], [1, false]],
         ];
 
         yield 'one' => [
             new StaticSetOfInts([42]),
-            [42 => true, 0 => false],
+            [[42, true], [0, false]],
         ];
 
         yield 'many' => [
             new StaticSetOfInts([3, 1, 2]),
-            [0 => false, 1 => true, 2 => true, 3 => true, 4 => false],
+            [[0, false], [1, true], [2, true], [3, true], [4, false]],
         ];
     }
 
     /**
      * @param StaticSetOfInts $set
-     * @param array<int, bool> $expected
+     * @param array{int, bool}[] $expected
      * @return void
      */
     #[Test, DataProvider('containsTests')]
@@ -81,11 +79,9 @@ final class StaticSetOfIntsTest extends TestCase
         StaticSetOfInts $set,
         array $expected,
     ): void {
-        $contains = [];
-        foreach ($expected as $key => $val) {
-            $contains[$key] = $set->contains($key);
+        foreach ($expected as [$key, $contains]) {
+            self::assertEquals($contains, $set->contains($key));
         }
-        self::assertEquals($expected, $contains);
     }
 
     #[Test]
