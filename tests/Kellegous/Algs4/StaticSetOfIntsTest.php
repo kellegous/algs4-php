@@ -31,6 +31,11 @@ final class StaticSetOfIntsTest extends TestCase
             new StaticSetOfInts([3, 1, 2]),
             [[0, -1], [1, 0], [2, 1], [3, 2], [4, -1]],
         ];
+
+        yield 'with duplicates' => [
+            new StaticSetOfInts([3, 3, 3]),
+            [[1, -1], [3, 0], [4, -1]],
+        ];
     }
 
     /**
@@ -82,17 +87,5 @@ final class StaticSetOfIntsTest extends TestCase
         foreach ($expected as [$key, $contains]) {
             self::assertEquals($contains, $set->contains($key));
         }
-    }
-
-    #[Test]
-    public function duplicateKeys(): void
-    {
-        self::expectExceptionObject(
-            new \InvalidArgumentException(
-                "keys contains duplicate value: 1"
-            )
-        );
-
-        new StaticSetOfInts([3, 1, 0, 2, 1]);
     }
 }
