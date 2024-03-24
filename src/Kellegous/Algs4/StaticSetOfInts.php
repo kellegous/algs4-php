@@ -27,18 +27,39 @@ use InvalidArgumentException;
 final class StaticSetOfInts
 {
     /**
+     * @var int[]
+     */
+    private array $keys;
+
+    /**
      * Initializes a set of integers specified by the integer array.
      * @param int[] $keys the array of integers
      * @throws InvalidArgumentException if the array contains duplicate integers
      */
-    public function __construct(private array $keys)
+    public function __construct(array $keys)
     {
-        sort($this->keys, SORT_NUMERIC);
+        // NOTE(knorton): The code in the text ignores duplicates in the input
+        // array. The source in the repo, though, throws an exception if a duplicate is
+        // present. Based on the examples, I'm pretty sure duplicates should be accepted.
+        // largeAllowlist.txt, for example, contains duplicates.
+        sort($keys, SORT_NUMERIC);
+        $this->keys = iterator_to_array(self::uniqueKeys($keys));
+    }
+
+    /**
+     * @param int[] $keys
+     * @return iterable<int>
+     */
+    private static function uniqueKeys(array $keys): iterable
+    {
+        if (empty($keys)) {
+            return;
+        }
+
+        yield $keys[0];
         for ($i = 1, $n = count($keys); $i < $n; $i++) {
-            if ($this->keys[$i] === $this->keys[$i - 1]) {
-                throw new InvalidArgumentException(
-                    "keys contains duplicate value: {$this->keys[$i]}"
-                );
+            if ($keys[$i] !== $keys[$i - 1]) {
+                yield $keys[$i];
             }
         }
     }
