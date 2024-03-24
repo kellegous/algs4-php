@@ -10,9 +10,9 @@ use InvalidArgumentException;
 /**
  * @template T int|string
  *
- * The {@code StaticSeTofInts} class represents a set of integers.
- * It supports searching for a given integer is in the set. It accomplishes
- * this by keeping the set of integers in a sorted array and using
+ * The {@code StaticSe} class represents a set of values.
+ * It supports searching for a given value is in the set. It accomplishes
+ * this by keeping the set of values in a sorted array and using
  * binary search to find the given integer.
  *
  * <p>
