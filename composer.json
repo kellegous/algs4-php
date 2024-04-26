@@ -21,7 +21,7 @@
   },
   "autoload": {
     "psr-4": {
-      "Kellegous\\Algs4\\": "src/Kellegous/Algs4"
+      "Kellegous\\Algs4\\": "src"
     }
   }
 }
