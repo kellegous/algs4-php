@@ -24,9 +24,20 @@ class InTest extends TestCase
     private static function streamWith(string $content): mixed
     {
         $data = base64_encode($content);
-        $stream = fopen("data://text/plain;base64,$data", 'r');
+        return self::openStream("data://text/plain;base64,$data", 'r');
+    }
+
+    /**
+     * @param string $path
+     * @param string $mode
+     * @return resource
+     * @throws IOException
+     */
+    private static function openStream(string $path, string $mode): mixed
+    {
+        $stream = fopen($path, $mode);
         if ($stream === false) {
-            throw new IOException('Unable to create stream');
+            throw new IOException("unable to open stream: $path");
         }
         return $stream;
     }
@@ -309,7 +320,7 @@ class InTest extends TestCase
         ErrorStream::register();
         try {
             yield 'read error' => [
-                new In(fopen("error-after://foo", 'r')),
+                new In(self::openStream('error-after://foo', 'r')),
                 new IOException('unable to read from stream'),
             ];
         } finally {

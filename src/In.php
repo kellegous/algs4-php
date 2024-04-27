@@ -4,7 +4,6 @@ namespace Kellegous\Algs4;
 
 use Closure;
 use Generator;
-use InvalidArgumentException;
 use RuntimeException;
 
 /**
@@ -18,38 +17,18 @@ final class In
     private const int DEFAULT_BUFFER_SIZE = 4096;
 
     /**
-     * @param resource $stream
-     */
-    private mixed $stream;
-
-    /**
      * @var string
      */
     private string $buffer = '';
 
     /**
-     * @var int<0,max>
-     */
-    private int $buffer_size;
-
-    /**
-     * @param mixed $stream
-     * @param int $buffer_size
+     * @param resource $stream
+     * @param int<0,max> $buffer_size
      */
     public function __construct(
-        mixed $stream,
-        int $buffer_size = self::DEFAULT_BUFFER_SIZE
+        private readonly mixed $stream,
+        private readonly int $buffer_size = self::DEFAULT_BUFFER_SIZE
     ) {
-        if ($buffer_size < 0) {
-            throw new InvalidArgumentException("buffer size must be >= 0");
-        }
-
-        if (!is_resource($stream)) {
-            throw new InvalidArgumentException("stream must be a resource");
-        }
-
-        $this->stream = $stream;
-        $this->buffer_size = $buffer_size;
     }
 
     /**

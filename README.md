@@ -13,7 +13,7 @@ this [public repository](https://github.com/kevin-wayne/algs4).
 - [x] [1.1](https://algs4.cs.princeton.edu/11model) [Knuth.java](https://github.com/kevin-wayne/algs4/blob/master/src/main/java/edu/princeton/cs/algs4/Knuth.java)
 - [x] [1.1](https://algs4.cs.princeton.edu/11model) [RandomSeq.java](https://github.com/kevin-wayne/algs4/blob/master/src/main/java/edu/princeton/cs/algs4/RandomSeq.java)
 - [x] [1.2](https://algs4.cs.princeton.edu/12oop) [Accumulator.java](https://github.com/kevin-wayne/algs4/blob/master/src/main/java/edu/princeton/cs/algs4/Accumulator.java)
-- [ ] [1.2](https://algs4.cs.princeton.edu/12oop) [Allowlist.java](https://github.com/kevin-wayne/algs4/blob/master/src/main/java/edu/princeton/cs/algs4/Allowlist.java)
+- [x] [1.2](https://algs4.cs.princeton.edu/12oop) [Allowlist.java](https://github.com/kevin-wayne/algs4/blob/master/src/main/java/edu/princeton/cs/algs4/Allowlist.java)
 - [ ] [1.2](https://algs4.cs.princeton.edu/12oop) [Counter.java](https://github.com/kevin-wayne/algs4/blob/master/src/main/java/edu/princeton/cs/algs4/Counter.java)
 - [ ] [1.2](https://algs4.cs.princeton.edu/12oop) [Date.java](https://github.com/kevin-wayne/algs4/blob/master/src/main/java/edu/princeton/cs/algs4/Date.java)
 - [ ] [1.2](https://algs4.cs.princeton.edu/12oop) [Interval1D.java](https://github.com/kevin-wayne/algs4/blob/master/src/main/java/edu/princeton/cs/algs4/Interval1D.java)
