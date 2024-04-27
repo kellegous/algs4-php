@@ -91,8 +91,33 @@ final class Scripts
         }
     }
 
+    private static function runPHPUnit(): bool
+    {
+        $status = 0;
+        passthru('vendor/bin/phpunit tests', $status);
+        return $status === 0;
+    }
+
+    private static function runPHPStan(): bool
+    {
+        $status = 0;
+        passthru('vendor/bin/phpstan', $status);
+        return $status === 0;
+    }
+
     public static function postInstall(): void
     {
         self::downloadData();
+    }
+
+    public static function validate(): void
+    {
+        $phpunit_ok = self::runPHPUnit();
+        $phpstan_ok = self::runPHPStan();
+        printf("PHPUnit Tests: ..................... %s\n", $phpunit_ok ? "👍" : "👎");
+        printf("PHPStan Static Analysis: ........... %s\n", $phpstan_ok ? "👍" : "👎");
+        if (!$phpunit_ok || !$phpstan_ok) {
+            exit(1);
+        }
     }
 }

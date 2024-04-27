@@ -30,6 +30,9 @@
   "scripts": {
     "post-install-cmd": [
       "Kellegous\\Algs4\\Composer\\Scripts::postInstall"
+    ],
+    "algs4:validate": [
+      "Kellegous\\Algs4\\Composer\\Scripts::validate"
     ]
   }
 }
