@@ -41,11 +41,6 @@ use Random\Randomizer;
 final class Random
 {
     /**
-     * @var Randomizer
-     */
-    private Randomizer $randomizer;
-
-    /**
      * The guassian method uses the polar form of the Box-Muller transform
      * which produces two independent gaussian values per call. This caches
      * the unused value for the next call.
@@ -56,9 +51,9 @@ final class Random
     /**
      * @param Randomizer $randomizer
      */
-    public function __construct(Randomizer $randomizer)
-    {
-        $this->randomizer = $randomizer;
+    public function __construct(
+        private readonly Randomizer $randomizer
+    ) {
     }
 
     /**

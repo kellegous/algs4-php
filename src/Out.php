@@ -8,20 +8,11 @@ final class Out
 {
     /**
      * @param resource $stream
-     */
-    private mixed $stream;
-
-    /**
-     * @param resource $stream
      * @throws InvalidArgumentException
      */
     public function __construct(
-        mixed $stream
+        private mixed $stream
     ) {
-        if (!is_resource($stream)) {
-            throw new InvalidArgumentException("stream must be a resource");
-        }
-        $this->stream = $stream;
     }
 
     /**
