@@ -86,25 +86,6 @@ class DateTest extends TestCase
         ];
     }
 
-    #[Test, DataProvider('fromStringTests')]
-    public function fromString(
-        string $s,
-        Date|Exception $expected
-    ): void {
-        if ($expected instanceof Exception) {
-            self::expectExceptionObject($expected);
-            Date::fromString($s);
-        } else {
-            self::assertEquals(
-                0,
-                Date::compare(
-                    $expected,
-                    Date::fromString($s)
-                )
-            );
-        }
-    }
-
     /**
      * @return iterable<string, array{Date, Date, int}>
      */
@@ -153,6 +134,120 @@ class DateTest extends TestCase
         ];
     }
 
+    /**
+     * @return iterable<string, array{Date, Date, bool}>
+     */
+    public static function isBeforeTests(): iterable
+    {
+        yield 'a < b' => [
+            Date::fromYMD(2021, Month::January, 1),
+            Date::fromYMD(2021, Month::January, 2),
+            true,
+        ];
+
+        yield 'a > b' => [
+            Date::fromYMD(2021, Month::January, 2),
+            Date::fromYMD(2021, Month::January, 1),
+            false,
+        ];
+
+        yield 'a = b' => [
+            Date::fromYMD(2021, Month::January, 1),
+            Date::fromYMD(2021, Month::January, 1),
+            false,
+        ];
+    }
+
+    /**
+     * @return iterable<string, array{Date, Date, bool}>
+     */
+    public static function isAfterTests(): iterable
+    {
+        yield 'a > b' => [
+            Date::fromYMD(2021, Month::January, 2),
+            Date::fromYMD(2021, Month::January, 1),
+            true,
+        ];
+
+        yield 'a < b' => [
+            Date::fromYMD(2021, Month::January, 1),
+            Date::fromYMD(2021, Month::January, 2),
+            false,
+        ];
+
+        yield 'a = b' => [
+            Date::fromYMD(2021, Month::January, 1),
+            Date::fromYMD(2021, Month::January, 1),
+            false,
+        ];
+    }
+
+    /**
+     * @return iterable<string, array{Date, Date}>
+     */
+    public static function nextTests(): iterable
+    {
+        yield 'simple' => [
+            Date::fromYMD(2021, Month::January, 1),
+            Date::fromYMD(2021, Month::January, 2),
+        ];
+
+        yield 'feb -> mar (non-leap)' => [
+            Date::fromYMD(2021, Month::February, 28),
+            Date::fromYMD(2021, Month::March, 1),
+        ];
+
+        yield 'feb 28 -> 29 (leap)' => [
+            Date::fromYMD(2020, Month::February, 28),
+            Date::fromYMD(2020, Month::February, 29),
+        ];
+
+        yield 'feb 29 -> mar 1 (leap)' => [
+            Date::fromYMD(2020, Month::February, 29),
+            Date::fromYMD(2020, Month::March, 1),
+        ];
+
+        yield 'dec 31 -> jan 1' => [
+            Date::fromYMD(2021, Month::December, 31),
+            Date::fromYMD(2022, Month::January, 1),
+        ];
+    }
+
+    /**
+     * @return iterable<string, array{Date, string}>
+     */
+    public static function asStringTests(): iterable
+    {
+        yield 'zero padding' => [
+            Date::fromYMD(0, Month::January, 1),
+            '01/01/0000',
+        ];
+
+        yield 'non-zero padding' => [
+            Date::fromYMD(2021, Month::December, 31),
+            '12/31/2021',
+        ];
+    }
+
+    #[Test, DataProvider('fromStringTests')]
+    public function fromString(
+        string $s,
+        Date|Exception $expected
+    ): void {
+        if ($expected instanceof Exception) {
+            self::expectExceptionObject($expected);
+            Date::fromString($s);
+        } else {
+            self::assertEquals(
+                0,
+                Date::compare(
+                    $expected,
+                    Date::fromString($s)
+                )
+            );
+        }
+    }
+
     #[Test, DataProvider('compareTests')]
     public function compare(Date $a, Date $b, int $expected): void
     {
@@ -166,5 +261,35 @@ class DateTest extends TestCase
         self::assertEquals(Month::January, $date->month());
         self::assertEquals(1, $date->day());
         self::assertEquals(2021, $date->year());
+    }
+
+    #[Test, DataProvider('isBeforeTests')]
+    public function isBefore(Date $a, Date $b, bool $expected): void
+    {
+        self::assertEquals($expected, $a->isBefore($b));
+    }
+
+    #[Test, DataProvider('isAfterTests')]
+    public function isAfter(Date $a, Date $b, bool $expected): void
+    {
+        self::assertEquals($expected, $a->isAfter($b));
+    }
+
+    #[Test, DataProvider('nextTests')]
+    public function next(Date $date, Date $expected): void
+    {
+        self::assertEquals(
+            0,
+            Date::compare(
+                $expected,
+                $date->next()
+            )
+        );
+    }
+
+    #[Test, DataProvider('asStringTests')]
+    public function asString(Date $date, string $expected): void
+    {
+        self::assertEquals($expected, (string)$date);
     }
 }

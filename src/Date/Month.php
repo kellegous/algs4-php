@@ -19,22 +19,22 @@ enum Month: int
         31
     ];
 
-    case January = 0;
-    case February = 1;
-    case March = 2;
-    case April = 3;
-    case May = 4;
-    case June = 5;
-    case July = 6;
-    case August = 7;
-    case September = 8;
-    case October = 9;
-    case November = 10;
-    case December = 11;
+    case January = 1;
+    case February = 2;
+    case March = 3;
+    case April = 4;
+    case May = 5;
+    case June = 6;
+    case July = 7;
+    case August = 8;
+    case September = 9;
+    case October = 10;
+    case November = 11;
+    case December = 12;
 
-    private static function isLeapYear(int $year): bool
+    public static function compare(self $a, self $b): int
     {
-        return $year % 400 == 0 || $year % 100 != 0 && $year % 4 == 0;
+        return $a->value <=> $b->value;
     }
 
     public function daysIn(int $year): int
@@ -42,11 +42,11 @@ enum Month: int
         if ($this === self::February && self::isLeapYear($year)) {
             return 29;
         }
-        return self::DAYS[$this->value];
+        return self::DAYS[$this->value - 1];
     }
 
-    public static function compare(self $a, self $b): int
+    private static function isLeapYear(int $year): bool
     {
-        return $a->value <=> $b->value;
+        return $year % 400 == 0 || $year % 100 != 0 && $year % 4 == 0;
     }
 }
