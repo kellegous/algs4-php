@@ -2,3 +2,4 @@
 /.idea
 /tmp
 tests/.phpunit.result.cache
+/data
