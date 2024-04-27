@@ -9,9 +9,9 @@ use RuntimeException;
 final readonly class Date
 {
     private function __construct(
+        private int $year,
         private Month $month,
         private int $day,
-        private int $year
     ) {
     }
 
@@ -30,19 +30,56 @@ final readonly class Date
         return $this->year;
     }
 
-    public static function fromYMD(Month $month, int $day, int $year): self
+    public function next(): self
     {
-        if ($year < 0) {
-            throw new InvalidArgumentException("invalid date: year < 0");
+        $y = $this->year;
+        $m = $this->month;
+        $d = $this->day;
+
+        if (self::isValid($y, $m, $d + 1)) {
+            return new self($y, $m, $d + 1);
         }
 
-        if ($day < 1 || $day > $month->daysIn($year)) {
+        $next_month = Month::tryFrom($m->value + 1);
+        if (self::isValid($y, $next_month, 1)) {
+            return new self($y, $next_month, 1);
+        }
+
+        return new self($y + 1, Month::January, 1);
+    }
+
+    public function __toString(): string
+    {
+        return self::format($this->year, $this->month, $this->day);
+    }
+
+    public static function fromYMD(int $year, Month $month, int $day): self
+    {
+        if (!self::isValid($year, $month, $day)) {
             throw new InvalidArgumentException(
-                sprintf("invalid date: day out of range for %02d/%04d", $month->value + 1, $year)
+                sprintf("invalid date: %s", self::format($year, $month, $day))
             );
         }
 
-        return new self($month, $day, $year);
+        return new self($year, $month, $day);
+    }
+
+    private static function format(int $year, Month $month, int $day): string
+    {
+        return sprintf("%02d/%02d/%04d", $month->value + 1, $day, $year);
+    }
+
+    /**
+     * @param int $year
+     * @param ?Month $month
+     * @param int $day
+     * @return bool
+     *
+     * @phpstan-assert-if-true Month $month
+     */
+    private static function isValid(int $year, ?Month $month, int $day): bool
+    {
+        return $year >= 0 && $month !== null && $day >= 1 && $day <= $month->daysIn($year);
     }
 
     public static function fromString(string $s): self
@@ -60,11 +97,11 @@ final readonly class Date
             throw new InvalidArgumentException("invalid date: {$s}");
         }
 
-        if ($month === null) {
+        if (!self::isValid($year, $month, $day)) {
             throw new InvalidArgumentException("invalid date: {$s}");
         }
 
-        return self::fromYMD($month, $day, $year);
+        return new self($year, $month, $day);
     }
 
     public static function compare(self $a, self $b): int
