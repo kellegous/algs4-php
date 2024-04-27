@@ -22,7 +22,10 @@
   "autoload": {
     "psr-4": {
       "Kellegous\\Algs4\\": "src"
-    }
+    },
+    "files": [
+      "src/functions.php"
+    ]
   },
   "scripts": {
     "post-install-cmd": [
