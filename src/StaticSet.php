@@ -5,9 +5,10 @@ declare(strict_types=1);
 namespace Kellegous\Algs4;
 
 use Closure;
+use SplFixedArray;
 
 /**
- * @template T int|string
+ * @template T
  *
  * The {@code StaticSe} class represents a set of values.
  * It supports searching for a given value is in the set. It accomplishes
@@ -26,60 +27,53 @@ use Closure;
  * @author Kevin Wayne
  * @author Kelly Norton
  */
-final class StaticSet
+final readonly class StaticSet
 {
     /**
-     * @var T[]
+     * @var SplFixedArray<T>
      */
-    private array $keys;
-
-    /**
-     * @var Closure(T, T): int
-     */
-    private Closure $comparator;
+    private SplFixedArray $keys;
 
     /**
      * @param T[] $keys
+     * @param Closure(T, T): int $comparator
      */
-    public function __construct(array $keys)
-    {
-        $cmp = self::getComparator($keys);
-        usort($keys, $cmp);
-        $this->keys = iterator_to_array(self::uniqueKeys($keys, $cmp));
-        $this->comparator = $cmp;
+    public function __construct(
+        array $keys,
+        private Closure $comparator
+    ) {
+        $this->keys = self::getUniqueKeys($keys, $comparator);
     }
 
     /**
-     * @param T[] $keys
-     * @param Closure(T, T): int $cmp
-     * @return iterable<T>
+     * @param array<T> $keys
+     * @param Closure(T,T):int $cmp
+     * @return SplFixedArray<T>
      */
-    private static function uniqueKeys(array $keys, Closure $cmp): iterable
-    {
+    private static function getUniqueKeys(
+        array $keys,
+        Closure $cmp
+    ): SplFixedArray {
         if (empty($keys)) {
-            return;
+            return new SplFixedArray(0);
         }
 
-        yield $keys[0];
+        usort($keys, $cmp);
+        $count = 1;
         for ($i = 1, $n = count($keys); $i < $n; $i++) {
             if ($cmp($keys[$i], $keys[$i - 1]) !== 0) {
-                yield $keys[$i];
+                $count++;
             }
         }
-    }
-
-    /**
-     * @param T[] $keys
-     * @return Closure(T, T): int
-     */
-    private static function getComparator(array $keys): Closure
-    {
-        foreach ($keys as $key) {
-            if (is_string($key)) {
-                return fn($a, $b) => strcmp($a, $b);
+        $unique = new SplFixedArray($count);
+        $unique[0] = $keys[0];
+        for ($i = 1, $j = 1, $n = count($keys); $i < $n; $i++) {
+            if ($cmp($keys[$i], $keys[$i - 1]) !== 0) {
+                $unique[$j] = $keys[$i];
+                $j++;
             }
         }
-        return fn($a, $b) => $a <=> $b;
+        return $unique;
     }
 
     /**
@@ -109,6 +103,7 @@ final class StaticSet
         while ($lo <= $hi) {
             $mid = $lo + intval(($hi - $lo) / 2);
             $val = $this->keys[$mid];
+            assert(!is_null($val));
             $cmp = $fn($key, $val);
             if ($cmp < 0) {
                 $hi = $mid - 1;

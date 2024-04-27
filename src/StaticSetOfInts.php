@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Kellegous\Algs4;
 
 use InvalidArgumentException;
+use SplFixedArray;
 
 /**
  *  The {@code StaticSeTofInts} class represents a set of integers.
@@ -27,9 +28,9 @@ use InvalidArgumentException;
 final class StaticSetOfInts
 {
     /**
-     * @var int[]
+     * @var SplFixedArray<int>
      */
-    private array $keys;
+    private SplFixedArray $keys;
 
     /**
      * Initializes a set of integers specified by the integer array.
@@ -42,26 +43,37 @@ final class StaticSetOfInts
         // array. The source in the repo, though, throws an exception if a duplicate is
         // present. Based on the examples, I'm pretty sure duplicates should be accepted.
         // largeAllowlist.txt, for example, contains duplicates.
-        sort($keys, SORT_NUMERIC);
-        $this->keys = iterator_to_array(self::uniqueKeys($keys));
+        $this->keys = self::getUniqueKeys($keys);
     }
 
     /**
      * @param int[] $keys
-     * @return iterable<int>
+     * @return SplFixedArray<int>
      */
-    private static function uniqueKeys(array $keys): iterable
+    private static function getUniqueKeys(array $keys): SplFixedArray
     {
         if (empty($keys)) {
-            return;
+            return new SplFixedArray(0);
         }
 
-        yield $keys[0];
+        sort($keys, SORT_NUMERIC);
+        $count = 1;
         for ($i = 1, $n = count($keys); $i < $n; $i++) {
             if ($keys[$i] !== $keys[$i - 1]) {
-                yield $keys[$i];
+                $count++;
             }
         }
+
+        $unique = new SplFixedArray($count);
+        $unique[0] = $keys[0];
+        for ($i = 1, $j = 1, $n = count($keys); $i < $n; $i++) {
+            if ($keys[$i] !== $keys[$i - 1]) {
+                $unique[$j] = $keys[$i];
+                $j++;
+            }
+        }
+
+        return $unique;
     }
 
     /**
