@@ -30,7 +30,7 @@ declare(strict_types=1);
 use Kellegous\Algs4\In;
 use Kellegous\Algs4\Out;
 
-require __DIR__ . '././vendor/autoload.php';
+require __DIR__ . '/../vendor/autoload.php';
 
 if ($argc < 3) {
     echo "Usage: php bin/cat.php <input> ... <output>\n";
