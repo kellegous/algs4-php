@@ -5,14 +5,16 @@ declare(strict_types=1);
 namespace Kellegous\Algs4;
 
 use Countable;
-use Iterator;
+use IteratorAggregate;
 use Kellegous\Algs4\Bag\Node;
+use Override;
+use Traversable;
 
 /**
  * @template T
- * @implements Iterator<int, T>
+ * @implements IteratorAggregate<int, T>
  */
-final class Bag implements Countable, Iterator
+final class Bag implements Countable, IteratorAggregate
 {
     /**
      * @var Node<T>|null
@@ -21,10 +23,6 @@ final class Bag implements Countable, Iterator
 
     private int $n = 0;
 
-    /**
-     * @var Iterator<T>|null
-     */
-    private ?Iterator $iterator = null;
 
     /**
      * @param T $item
@@ -42,33 +40,6 @@ final class Bag implements Countable, Iterator
         return $this->first === null;
     }
 
-    /**
-     * @return T|null
-     */
-    public function current(): mixed
-    {
-        return $this->iterator?->current();
-    }
-
-    public function next(): void
-    {
-        $this->iterator?->next();
-    }
-
-    public function key(): int
-    {
-        return $this->iterator?->key();
-    }
-
-    public function valid(): bool
-    {
-        return $this->iterator !== null && $this->iterator->valid();
-    }
-
-    public function rewind(): void
-    {
-        $this->iterator = $this->iterate();
-    }
 
     public function count(): int
     {
@@ -76,9 +47,10 @@ final class Bag implements Countable, Iterator
     }
 
     /**
-     * @return Iterator<T>
+     * @return Traversable<T>
      */
-    private function iterate(): Iterator
+    #[Override]
+    public function getIterator(): Traversable
     {
         $current = $this->first;
         for (; $current !== null; $current = $current->getNext()) {

@@ -16,7 +16,7 @@ this [public repository](https://github.com/kevin-wayne/algs4).
 - [x] [1.2](https://algs4.cs.princeton.edu/12oop) [Allowlist.java](https://github.com/kevin-wayne/algs4/blob/master/src/main/java/edu/princeton/cs/algs4/Allowlist.java)
 - [x] [1.2](https://algs4.cs.princeton.edu/12oop) [Counter.java](https://github.com/kevin-wayne/algs4/blob/master/src/main/java/edu/princeton/cs/algs4/Counter.java)
 - [x] [1.2](https://algs4.cs.princeton.edu/12oop) [Date.java](https://github.com/kevin-wayne/algs4/blob/master/src/main/java/edu/princeton/cs/algs4/Date.java)
-- [ ] [1.2](https://algs4.cs.princeton.edu/12oop) [Interval1D.java](https://github.com/kevin-wayne/algs4/blob/master/src/main/java/edu/princeton/cs/algs4/Interval1D.java)
+- [x] [1.2](https://algs4.cs.princeton.edu/12oop) [Interval1D.java](https://github.com/kevin-wayne/algs4/blob/master/src/main/java/edu/princeton/cs/algs4/Interval1D.java)
 - [ ] [1.2](https://algs4.cs.princeton.edu/12oop) [Interval2D.java](https://github.com/kevin-wayne/algs4/blob/master/src/main/java/edu/princeton/cs/algs4/Interval2D.java)
 - [ ] [1.2](https://algs4.cs.princeton.edu/12oop) [Point2D.java](https://github.com/kevin-wayne/algs4/blob/master/src/main/java/edu/princeton/cs/algs4/Point2D.java)
 - [ ] [1.2](https://algs4.cs.princeton.edu/12oop) [RectHV.java](https://github.com/kevin-wayne/algs4/blob/master/src/main/java/edu/princeton/cs/algs4/RectHV.java)
