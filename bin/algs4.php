@@ -13,5 +13,6 @@ $app = new Application('algs4');
 $app->addCommands([
     new Commands\AllowList(),
     new Commands\Average(),
+    new Commands\RandomSeq(),
 ]);
 $app->run();
