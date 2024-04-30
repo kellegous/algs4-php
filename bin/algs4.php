@@ -1,3 +1,4 @@
+#!/usr/bin/env php
 <?php
 
 declare(strict_types=1);
@@ -10,6 +11,7 @@ require __DIR__ . '/../vendor/autoload.php';
 
 $app = new Application('algs4');
 $app->addCommands([
-    new Commands\AllowList()
+    new Commands\AllowList(),
+    new Commands\Average(),
 ]);
 $app->run();
