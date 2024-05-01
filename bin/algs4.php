@@ -14,5 +14,6 @@ $app->addCommands([
     new Commands\AllowList(),
     new Commands\Average(),
     new Commands\RandomSeq(),
+    new Commands\Interval2D(),
 ]);
 $app->run();

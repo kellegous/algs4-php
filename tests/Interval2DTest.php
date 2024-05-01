@@ -127,6 +127,66 @@ class Interval2DTest extends TestCase
     }
 
     /**
+     * @return iterable<string, array{Interval2D, Point2D, bool}>
+     */
+    public static function containsTests(): iterable
+    {
+        yield 'center' => [
+            Interval2D::fromXY(
+                Interval1D::fromMinMax(-1, 1),
+                Interval1D::fromMinMax(-1, 1)
+            ),
+            Point2D::fromXY(0, 0),
+            true
+        ];
+
+        yield '< x' => [
+            Interval2D::fromXY(
+                Interval1D::fromMinMax(-1, 1),
+                Interval1D::fromMinMax(-1, 1)
+            ),
+            Point2D::fromXY(-2, 0),
+            false
+        ];
+
+        yield '> x' => [
+            Interval2D::fromXY(
+                Interval1D::fromMinMax(-1, 1),
+                Interval1D::fromMinMax(-1, 1)
+            ),
+            Point2D::fromXY(2, 0),
+            false
+        ];
+
+        yield '< y' => [
+            Interval2D::fromXY(
+                Interval1D::fromMinMax(-1, 1),
+                Interval1D::fromMinMax(-1, 1)
+            ),
+            Point2D::fromXY(0, -2),
+            false
+        ];
+
+        yield '> y' => [
+            Interval2D::fromXY(
+                Interval1D::fromMinMax(-1, 1),
+                Interval1D::fromMinMax(-1, 1)
+            ),
+            Point2D::fromXY(0, 2),
+            false
+        ];
+
+        yield 'on border' => [
+            Interval2D::fromXY(
+                Interval1D::fromMinMax(-1, 1),
+                Interval1D::fromMinMax(-1, 1)
+            ),
+            Point2D::fromXY(1, 1),
+            true
+        ];
+    }
+
+    /**
      * @param Interval1D $x
      * @param Interval1D $y
      * @return void
@@ -184,5 +244,14 @@ class Interval2DTest extends TestCase
         string $expected
     ): void {
         self::assertEquals($expected, (string)$interval);
+    }
+
+    #[Test, DataProvider('containsTests')]
+    public function contains(
+        Interval2D $interval,
+        Point2D $point,
+        bool $expected
+    ): void {
+        self::assertEquals($expected, $interval->contains($point));
     }
 }

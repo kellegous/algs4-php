@@ -4,7 +4,7 @@ namespace Kellegous\Algs4;
 
 final readonly class Point2D
 {
-    private function __construct(
+    public function __construct(
         private float $x,
         private float $y
     ) {
