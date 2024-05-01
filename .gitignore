@@ -1,5 +1,5 @@
 /vendor
 /.idea
 /tmp
-tests/.phpunit.result.cache
+.phpunit.result.cache
 /data
