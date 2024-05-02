@@ -11,6 +11,7 @@
   ],
   "require": {
     "php": "^8.3",
+    "ext-gd": "*",
     "symfony/console": "^7.0"
   },
   "require-dev": {
