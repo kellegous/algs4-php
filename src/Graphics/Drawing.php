@@ -147,4 +147,21 @@ final readonly class Drawing
             throw new Exception('unable to flood fill');
         }
     }
+
+    public function setPixel(int $x, int $y, Color $color): void
+    {
+        if (!imagesetpixel($this->im, $x, $y, $color->getID())) {
+            throw new Exception('unable to set pixel');
+        }
+    }
+
+    public function width(): int
+    {
+        return imagesx($this->im);
+    }
+
+    public function height(): int
+    {
+        return imagesy($this->im);
+    }
 }

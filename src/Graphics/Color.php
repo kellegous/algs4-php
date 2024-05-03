@@ -23,6 +23,35 @@ final readonly class Color
      * @param int<0,255> $r
      * @param int<0,255> $g
      * @param int<0,255> $b
+     * @param int<0,255> $a
+     * @return self
+     * @throws Exception
+     */
+    public static function fromRGBA(
+        Drawing $drawing,
+        int $r,
+        int $g,
+        int $b,
+        int $a,
+    ): self {
+        $c = imagecolorallocatealpha($drawing->getImage(), $r, $g, $b, $a >> 1);
+        if ($c === false) {
+            throw new Exception('unable to allocate color');
+        }
+        return new self($c);
+    }
+
+    public static function white(Drawing $drawing): self
+    {
+        return self::fromRGB($drawing, 255, 255, 255);
+    }
+
+    /**
+     * Create a new opaque color from the given RGB values.
+     * @param Drawing $drawing
+     * @param int<0,255> $r
+     * @param int<0,255> $g
+     * @param int<0,255> $b
      * @return self
      * @throws Exception
      * @see Drawing::colorFromRGB()
@@ -40,28 +69,9 @@ final readonly class Color
         return new self($c);
     }
 
-    /**
-     * Create a new opaque color from the given RGB values.
-     * @param Drawing $drawing
-     * @param int<0,255> $r
-     * @param int<0,255> $g
-     * @param int<0,255> $b
-     * @param int<0,255> $a
-     * @return self
-     * @throws Exception
-     */
-    public static function fromRGBA(
-        Drawing $drawing,
-        int $r,
-        int $g,
-        int $b,
-        int $a,
-    ): self {
-        $c = imagecolorallocatealpha($drawing->getImage(), $r, $g, $b, $a >> 1);
-        if ($c === false) {
-            throw new Exception('unable to allocate color');
-        }
-        return new self($c);
+    public static function black(Drawing $drawing): self
+    {
+        return self::fromRGB($drawing, 0, 0, 0);
     }
 
     /**
