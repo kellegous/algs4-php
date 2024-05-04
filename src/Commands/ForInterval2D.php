@@ -11,6 +11,7 @@ use Kellegous\Algs4\Graphics\Color;
 use Kellegous\Algs4\Graphics\Destination;
 use Kellegous\Algs4\Graphics\Drawing;
 use Kellegous\Algs4\Interval1D;
+use Kellegous\Algs4\Interval2D;
 use Kellegous\Algs4\Point2D;
 use Kellegous\Algs4\Random;
 use Kellegous\Algs4\Stdio;
@@ -30,7 +31,7 @@ use function Kellegous\Algs4\parse_int;
     name: 'interval2d',
     description: 'command associated with Interval2D'
 )]
-final class Interval2D extends Command
+final class ForInterval2D extends Command
 {
     private const int SIZE = 512;
 
@@ -90,7 +91,7 @@ final class Interval2D extends Command
 
         $x_interval = Interval1D::fromMinMax($x_min, $x_max);
         $y_interval = Interval1D::fromMinMax($y_min, $y_max);
-        $box = \Kellegous\Algs4\Interval2D::fromXY($x_interval, $y_interval);
+        $box = Interval2D::fromXY($x_interval, $y_interval);
         $canvas->rectangle(
             $box->x()->min(),
             $box->y()->min(),
